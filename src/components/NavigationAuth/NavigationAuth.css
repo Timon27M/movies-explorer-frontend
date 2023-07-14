@@ -1,0 +1,13 @@
+.navigation-auth__list {
+    display: flex;
+    list-style: none;
+}
+
+.navigation-auth__link {
+    text-decoration: none;
+    color: black;
+}
+
+.navigation-auth__link_type_login {
+    margin-left: 30px;
+}
