@@ -1,13 +1,54 @@
 .navigation-auth__list {
-    display: flex;
-    list-style: none;
+  display: flex;
+  list-style: none;
 }
 
 .navigation-auth__link {
-    text-decoration: none;
-    color: black;
+  text-decoration: none;
+  color: black;
+}
+
+.navigation-auth__list_type_login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 76px;
+  min-height: 32px;
+  border: 1px solid black;
+  background-color: #2be080;
+  border-radius: 3px;
+  margin-left: 30px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.navigation-auth__list_type_login:hover {
+  opacity: 0.7;
 }
 
 .navigation-auth__link_type_login {
-    margin-left: 30px;
+  color: #000;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.navigation-auth__list_type_register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navigation-auth__link_type_register {
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  color: white;
+}
+
+.navigation-auth__link_type_register:hover {
+    opacity: 0.7;
 }
