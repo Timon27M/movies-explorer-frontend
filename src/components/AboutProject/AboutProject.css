@@ -1,5 +1,6 @@
 .aboutProject {
   padding: 110px 70px;
+  background-color: #FFF;
 }
 
 .aboutProject__title {
@@ -11,6 +12,7 @@
   line-height: normal;
   letter-spacing: -0.88px;
   text-align: start;
+  margin: 0;
 }
 
 .aboutProject__info {
@@ -38,7 +40,7 @@
   font-weight: 400;
   line-height: normal;
   letter-spacing: -0.8px;
-  margin-bottom: 26px;
+  margin: 0 0 26px;
 }
 
 .aboutProject__description-text {
@@ -48,6 +50,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 20px; /* 142.857% */
+  margin-bottom: 0;
 }
 
 .aboutProject__container {
@@ -76,6 +79,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  margin: 0;
 }
 
 .aboutProject__line_type_white {
@@ -92,7 +96,7 @@
 }
 
 .aboutProject__line-info {
-  margin-top: 14px;
+  margin: 14px 0 0;
   color: #a0a0a0;
   text-align: center;
   font-family: Inter;
@@ -100,16 +104,6 @@
   font-style: normal;
   font-weight: 500;
   line-height: 17px;
-}
-
-@media all and (max-width: 1300px) {
-    .aboutProject__line_type_green {
-        min-width: 190px;
-      }
-
-      .aboutProject {
-        padding: 110px 50px;
-      }
 }
 
 @media all and (max-width: 1190px) {
@@ -127,11 +121,24 @@
 
 @media all and (max-width: 820px) {
     .aboutProject__line_type_green {
-        min-width: 150px;
+        min-width: 140px;
       }
 
       .aboutProject {
         padding: 90px 50px;
+      }
+
+      .aboutProject__description-text {
+        font-size: 12px;
+        line-height: 18px;
+      }
+
+      .aboutProject__description-title {
+        margin-bottom: 22px;
+      }
+
+      .aboutProject__container {
+        margin-top: 93px;
       }
 }
 
@@ -141,7 +148,7 @@
       }
 
     .aboutProject__info {
-        margin-top: 23px;
+        margin-top: 28px;
         padding-top: 60px;
         display: flex;
         flex-direction: column;
@@ -166,6 +173,7 @@
       .aboutProject__line-title {
         margin-top: 0;
         font-size: 11px;
+        min-height: 35px;
       }
 
       .aboutProject__line_type_green {
@@ -174,6 +182,7 @@
 
       .aboutProject__line-info {
         font-size: 11px;
+        margin-top: 10px;
       }
 
       .aboutProject__description-text {

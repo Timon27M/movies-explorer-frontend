@@ -1,5 +1,6 @@
 .techs {
   padding: 100px 70px;
+  background-color: #F5F5F5;
 }
 
 .techs__title {
@@ -72,6 +73,7 @@
   font-weight: 400;
   line-height: normal;
   letter-spacing: -0.56px;
+  margin: 0;
 }
 
 .techs__info-block:not(:first-child) {
@@ -117,9 +119,14 @@
     font-size: 18px;
   }
 
+  .techs__description {
+    margin-top: 28px;
+  }
+
   .techs__description-title {
-    margin-top: 60px;
+    margin-top: 53px;
     font-size: 30px;
+    max-height: 36px;
   }
 
   .techs__description-text {

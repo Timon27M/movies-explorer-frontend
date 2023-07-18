@@ -1,5 +1,5 @@
 .aboutMe {
-  padding: 110px 70px;
+  padding: 110px 70px 0;
 }
 
 .aboutMe__title {
@@ -74,7 +74,7 @@
 
 @media all and (max-width: 820px) {
   .aboutMe {
-    padding: 90px 50px 0;
+    padding: 90px 50px 0px;
   }
 
   .aboutMe__info-title {
@@ -157,5 +157,9 @@
 
   .aboutMe__info-text {
     font-size: 11px;
+  }
+
+  .aboutMe__image {
+    max-height: 352px;
   }
 }

@@ -15,6 +15,7 @@
 
 .footer__container {
     margin-top: 20px;
+    padding-top: 20px;
     border-top: 1px solid #E8E8E8;
     display: flex;
     justify-content: space-between;
@@ -28,6 +29,7 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    margin: 0;
 }
 
 .footer__link-yp {
@@ -70,6 +72,8 @@
 
       .footer__container {
         flex-direction: column-reverse;
+        margin-top: 21px;
+        padding-top: 0;
       }
 
       .footer__links {

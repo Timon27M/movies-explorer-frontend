@@ -24,3 +24,13 @@
 .NavTab__link:not(:last-child) {
   margin-right: 40px;
 }
+
+@media all and (max-width: 500px) {
+  .NavTab__link {
+    font-size: 11px;
+  }
+
+  .NavTab__link:not(:last-child) {
+    margin-right: 24px;
+  }
+}
