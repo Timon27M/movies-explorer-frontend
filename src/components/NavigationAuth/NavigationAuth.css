@@ -1,11 +1,14 @@
 .navigation-auth {
+  width: 100%;
   margin: 21px 0;
+  text-align: right;
 }
 
 .navigation-auth__list {
   display: flex;
   list-style: none;
   margin: 0;
+  float: right;
 }
 
 .navigation-auth__link {
@@ -40,9 +43,9 @@
 }
 
 .navigation-auth__list_type_register {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .navigation-auth__link_type_register {
@@ -55,7 +58,7 @@
 }
 
 .navigation-auth__link_type_register:hover {
-    opacity: 0.7;
+  opacity: 0.7;
 }
 
 @media all and (max-width: 500px) {

@@ -1,7 +1,7 @@
 .header {
     display: flex;
-    justify-content: space-between;
     padding: 0 70px;
+    min-height: 74px;
 }
 
 .header__link {
@@ -12,6 +12,10 @@
 
 .header_type_auth {
     background-color: #073042;;
+}
+
+.header_type_site {
+    background-color: #FFF;
 }
 
 @media all and (max-width: 820px) {
