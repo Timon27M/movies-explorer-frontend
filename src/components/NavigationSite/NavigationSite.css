@@ -50,7 +50,7 @@
 }
 
 .navigationSite__profile:hover {
-    opacity: 0.7;
+  opacity: 0.7;
 }
 
 .navigationSite__profile-text {
@@ -113,14 +113,19 @@
     height: 100vh;
   }
 
+  .navigationSite_active {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
   .navigationSite__container {
-    position: absolute;
+    position: fixed;
     width: 67%;
     height: 100vh;
-    transition: 1s;
+    transition: 0.6s;
     transform: translateX(+120%);
     background-color: #fff;
     margin-left: 0;
+    z-index: 1;
   }
 
   .navigationSite__container_active {
@@ -147,8 +152,12 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 22px;
-    right: 22px;
+    top: 18px;
+    right: 18px;
+  }
+
+  .navigationSite__profile-text {
+    margin: 0;
   }
 
   .navigationSite__main-item_type_home {
@@ -158,7 +167,9 @@
   .navigationSite__main {
     display: flex;
     flex-direction: column;
+    align-items: center;
     margin-top: 159px;
+    min-width: 340px;
   }
 
   .navigationSite__main-item {
@@ -169,17 +180,52 @@
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+    width: fit-content;
+    margin-left: 0;
   }
 
-  .navigationSite__main-item:not(:first-child) {
-    margin-top: 28px;
+  .navigationSite__main-item:not(:last-child) {
+    margin-bottom: 28px;
   }
 
   .navigationSite__acc {
     margin-bottom: 92px;
   }
 
-  .navigationSite__profile {
+  .navigationSite__main-item_active {
+    border-bottom: 2px solid #000;
+    padding-bottom: 4px;
+  }
 
+  .navigationSite__main-item_active:not(:last-child) {
+    margin-bottom: 22px;
+  }
+}
+
+@media all and (max-width: 500px) {
+  .navigationSite__container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .navigationSite__main-item:not(:last-child) {
+    margin-bottom: 24px;
+  }
+
+  .navigationSite__main-item_active {
+    border-bottom: 2px solid #000;
+    padding-bottom: 7px;
+  }
+
+  .navigationSite__main-item_active:not(:last-child) {
+    margin-bottom: 15px;
+  }
+
+  .navigationSite__main {
+    margin-top: 144px;
+  }
+
+  .navigationSite__acc {
+    margin-bottom: 48px;
   }
 }

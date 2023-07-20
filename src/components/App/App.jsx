@@ -1,13 +1,15 @@
-import logo from '../../images/logo.svg';
-import './App.css';
-import Header from "../Header/Header.jsx"
-import Main from '../Main/Main';
+import "./App.css";
+import {  Route, Routes } from "react-router-dom";
+import Header from "../Header/Header.jsx";
+import Main from "../Main/Main";
 
 function App() {
   return (
     <div className="App">
       <Header />
-      <Main />
+      <Routes>
+        <Route path="/" element={<Main />} />
+      </Routes>
     </div>
   );
 }

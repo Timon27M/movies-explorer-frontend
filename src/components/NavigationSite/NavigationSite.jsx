@@ -12,8 +12,14 @@ function NavigationSite() {
     setOpenMenu(!openMenu);
   };
 
+  const defaultClassNameMainItem = "navigationSite__main-item";
+  const activeClassName =
+    "navigationSite__main-item navigationSite__main-item_active";
+
   return (
-    <div className="navigationSite">
+    <div
+      className={`navigationSite ${openMenu ? "navigationSite_active" : ""}`}
+    >
       <button className="navigationSite__button" onClick={showMenu}>
         <img
           className="navigationSite__img-button"
@@ -28,14 +34,44 @@ function NavigationSite() {
       >
         <div className="navigationSite__content">
           <div className="navigationSite__main">
-            <NavLink className="navigationSite__main-item navigationSite__main-item_type_home">Главная</NavLink>
-            <NavLink className="navigationSite__main-item navigationSite__main-item_type_all-films">Фильмы</NavLink>
-            <NavLink className="navigationSite__main-item navigationSite__main-item_type_my-films">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive
+                  ? activeClassName + " navigationSite__main-item_type_home"
+                  : defaultClassNameMainItem + " navigationSite__main-item_type_home"
+              }
+            >
+              Главная
+            </NavLink>
+            <NavLink
+              to="/movies"
+              className={({ isActive }) =>
+              isActive
+                ? activeClassName + " navigationSite__main-item_type_all-films"
+                : defaultClassNameMainItem + " navigationSite__main-item_type_all-films"
+            }
+            >
+              Фильмы
+            </NavLink>
+            <NavLink
+              to="/saved-movies"
+              activeClassName="navigationSite__main-item_active"
+              className={({ isActive }) =>
+              isActive
+                ? activeClassName + " navigationSite__main-item_type_my-films"
+                : defaultClassNameMainItem + " navigationSite__main-item_type_my-films"
+            }
+            >
               Сохранённые фильмы
             </NavLink>
           </div>
           <div className="navigationSite__acc">
-            <NavLink className="navigationSite__profile">
+            <NavLink
+              to="/profile"
+              activeClassName="navigationSite__main-item_active"
+              className="navigationSite__profile"
+            >
               <p className="navigationSite__profile-text">Аккаунт</p>
               <img
                 className="navigationSite__profile-img"
