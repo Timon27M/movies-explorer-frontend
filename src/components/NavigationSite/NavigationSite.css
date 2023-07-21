@@ -60,6 +60,7 @@
   font-style: normal;
   font-weight: 500;
   line-height: 16px;
+  margin: 0;
 }
 
 .navigationSite__main-item_type_home {
@@ -80,10 +81,9 @@
 
 .navigationSite__profile-img {
   height: fit-content;
-  margin-left: 13px;
-  border: 9px solid #f9f9f9;
   border-radius: 6px;
-  background-color: #f9f9f9;
+  border: 10px solid #f9f9f9;
+  margin-left: 13px;
 }
 
 .navigationSite__button {

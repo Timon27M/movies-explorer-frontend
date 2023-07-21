@@ -1,0 +1,18 @@
+.moviesCardList {
+  padding: 70px 70px 80px;
+}
+
+.moviesCardList__elements {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 43px 30px;
+}
+
+.moviesCardList__button {
+  margin-top: 60px;
+  min-width: 320px;
+  border: 1px solid #F9F9F9;
+  border-radius: 6px;
+  text-align: center;
+  padding: 10px 0;
+}

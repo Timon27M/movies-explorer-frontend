@@ -69,7 +69,6 @@ function NavigationSite() {
           <div className="navigationSite__acc">
             <NavLink
               to="/profile"
-              activeClassName="navigationSite__main-item_active"
               className="navigationSite__profile"
             >
               <p className="navigationSite__profile-text">Аккаунт</p>
