@@ -221,6 +221,10 @@
     margin-bottom: 15px;
   }
 
+  .navigationSite__button {
+    right: 14px;
+  }
+
   .navigationSite__main {
     margin-top: 144px;
   }

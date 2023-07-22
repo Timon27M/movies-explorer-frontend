@@ -1,4 +1,5 @@
 import "./MoviesCardList.css";
+import { useLocation } from "react-router-dom";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import img1 from "../../images/pic__COLOR_pic1.jpg";
 import img2 from "../../images/pic__COLOR_pic2.jpg";
@@ -14,6 +15,8 @@ import img11 from "../../images/pic__COLOR_pic11.jpg";
 import img12 from "../../images/pic__COLOR_pic12.jpg";
 
 function MoviesCardList() {
+  const { pathname } = useLocation();
+
   const cards = [
     {
       image: img1,
@@ -25,7 +28,7 @@ function MoviesCardList() {
       image: img2,
       text: "Киноальманах «100 лет дизайна»",
       time: "1ч 42м",
-      isLiked: true,
+      isLiked: false,
     },
     {
       image: img3,
@@ -43,7 +46,7 @@ function MoviesCardList() {
       image: img5,
       text: "Бег это свобода",
       time: "1ч 42м",
-      isLiked: true,
+      isLiked: false,
     },
     {
       image: img6,
@@ -55,18 +58,19 @@ function MoviesCardList() {
       image: img7,
       text: "Когда я думаю о Германии ночью",
       time: "1ч 42м",
-      isLiked: false,
+      isLiked: true,
     },
     {
       image: img8,
       text: "Gimme Danger: История Игги и The Stooges",
       time: "1ч 42м",
+      isLiked: true,
     },
     {
       image: img9,
       text: "Дженис: Маленькая девочка грустит",
       time: "1ч 42м",
-      isLiked: true,
+      isLiked: false,
     },
     {
       image: img10,
@@ -92,9 +96,17 @@ function MoviesCardList() {
     <section className="moviesCardList">
       <div className="moviesCardList__elements">
         {cards.map((card) => {
+            if (pathname === '/movies') {
           return (
             <MoviesCard image={card.image} text={card.text} time={card.time} isLiked={card.isLiked} />
           );
+        } else {
+            if (card.isLiked === true) {
+                return (
+                    <MoviesCard image={card.image} text={card.text} time={card.time} isLiked={card.isLiked} />
+                  );
+            }
+          }
         })}
       </div>
         <button className="moviesCardList__button">Ещё</button>
