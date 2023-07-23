@@ -1,0 +1,40 @@
+.auth-content {
+  width: 100%;
+}
+
+.auth-content:not(:first-child) {
+  margin-top: 20px;
+}
+
+.auth-content__name {
+  color: #a0a0a0;
+  font-family: Inter;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+}
+
+.auth-content__input {
+  width: 100%;
+  margin-top: 10px;
+  padding: 15px;
+  border: 0;
+  color: #000;
+  font-family: Inter;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  background-color: #F9F9F9;
+}
+
+.auth-text-error {
+  color: #ff3055;
+  font-family: Inter;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}

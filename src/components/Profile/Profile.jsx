@@ -16,7 +16,7 @@ function Profile() {
         <div className="profile__content profile__content_type_email">
           <p className="profile__text profile__text_type_email">E-mail</p>
           <input
-            type="text"
+            type="email"
             value="pochta@yandex.ru"
             className="profile__input profile__input_type_text"
           />
