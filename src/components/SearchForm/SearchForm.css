@@ -68,6 +68,7 @@
 .search__parameter {
   display: flex;
   width: fit-content;
+  margin-left: 15px;
 }
 
 .search__parameter-name {
@@ -143,6 +144,7 @@
 
   .search__parameter {
     margin-top: 38px;
+    margin-left: 0;
   }
 
   .search__contant {

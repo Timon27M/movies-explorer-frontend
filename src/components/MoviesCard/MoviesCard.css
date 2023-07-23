@@ -87,6 +87,8 @@
 .moviesCard__time {
   margin-top: 2px;
   margin-bottom: 0;
+  margin-left: 5px;
+  min-width: 37px;
   color: #a0a0a0;
   font-family: Inter;
   font-size: 11px;

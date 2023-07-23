@@ -1,21 +1,27 @@
 import "./App.css";
-import {  Route, Routes } from "react-router-dom";
+import {  Route, Routes, useLocation } from "react-router-dom";
 import Header from "../Header/Header.jsx";
 import Footer from "../Footer/Footer";
 import Main from "../Main/Main";
 import Movies from "../Movies/Movies";
 import SavedMovies from "../SavedMovies/SavedMovies";
+import Profile from "../Profile/Profile";
 
 function App() {
+  const { pathname } = useLocation();
+
   return (
     <div className="App">
-      <Header />
+      {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
+          <Header /> : ''}
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/movies" element={<Movies />} />
         <Route path="/saved-movies" element={<SavedMovies />} />
+        <Route path="/profile" element={<Profile />}/>
       </Routes>
-      <Footer />
+      {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' ?
+          <Footer /> : ''}
     </div>
   );
 }

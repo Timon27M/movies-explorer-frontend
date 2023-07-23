@@ -64,7 +64,7 @@ function MoviesCardList() {
       image: img8,
       text: "Gimme Danger: История Игги и The Stooges",
       time: "1ч 42м",
-      isLiked: true,
+      isLiked: false,
     },
     {
       image: img9,
