@@ -17,7 +17,6 @@ function Register() {
           <input
             type="text"
             className="auth-content__input"
-            value="Виталий"
           />
         </div>
         <div className="auth-content">
@@ -25,7 +24,6 @@ function Register() {
           <input
             type="email"
             className="auth-content__input"
-            value="pochta@yandex.ru|"
           />
         </div>
         <div className="auth-content">
@@ -33,8 +31,6 @@ function Register() {
           <input
             type="password"
             className="auth-content__input"
-            value="Виталий"
-            minLength={2}
           />
         </div>
         <span className="auth-text-error">Что-то пошло не так...</span>

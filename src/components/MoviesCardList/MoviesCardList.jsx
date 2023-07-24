@@ -64,7 +64,7 @@ function MoviesCardList() {
       image: img8,
       text: "Gimme Danger: История Игги и The Stooges",
       time: "1ч 42м",
-      isLiked: false,
+      isLiked: true,
     },
     {
       image: img9,
@@ -92,24 +92,42 @@ function MoviesCardList() {
     },
   ];
 
+  const myCards = cards.filter((card) => card.isLiked === true);
+
   return (
     <section className="moviesCardList">
-      <div className="moviesCardList__elements">
-        {cards.map((card) => {
-            if (pathname === '/movies') {
-          return (
-            <MoviesCard image={card.image} text={card.text} time={card.time} isLiked={card.isLiked} />
-          );
-        } else {
-            if (card.isLiked === true) {
-                return (
-                    <MoviesCard image={card.image} text={card.text} time={card.time} isLiked={card.isLiked} />
-                  );
-            }
-          }
-        })}
-      </div>
+      {cards.length > 0 && pathname === "/movies" && (
+        <div className="moviesCardList__elements">
+          {cards.map((card) => (
+            <MoviesCard
+              image={card.image}
+              text={card.text}
+              time={card.time}
+              isLiked={card.isLiked}
+            />
+          ))}
+        </div>
+      )}
+
+      {cards.length > 5 && pathname === "/movies" && (
         <button className="moviesCardList__button">Ещё</button>
+      )}
+
+      {myCards.length > 0 && pathname === "/saved-movies" && (
+        <div className="moviesCardList__elements">
+          {myCards.map((card) => (
+            <MoviesCard
+              image={card.image}
+              text={card.text}
+              time={card.time}
+              isLiked={card.isLiked}
+            />
+          ))}
+        </div>
+      )}
+      {myCards.length === 0 && pathname === "/saved-movies" && (
+        <div className="moviesCardList__error">Не найдено</div>
+      )}
     </section>
   );
 }

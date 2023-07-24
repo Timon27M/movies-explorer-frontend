@@ -43,6 +43,10 @@
   padding-right: 7px;
 }
 
+.search__button:hover {
+  opacity: 0.7;
+} 
+
 .search__img-find {
   width: 100%;
   min-height: 34px;

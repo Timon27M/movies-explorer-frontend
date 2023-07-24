@@ -52,6 +52,10 @@
   border: none;
 }
 
+.moviesCard__button:hover {
+  opacity: 0.7;
+}
+
 .moviesCard__content:hover .moviesCard__button {
     display: flex;
     justify-content: center;

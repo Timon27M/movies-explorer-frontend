@@ -22,7 +22,7 @@ function App() {
         <Route path="/saved-movies" element={<SavedMovies />} />
         <Route path="/profile" element={<Profile />}/>
         <Route path="/signup" element={<Register />} />
-        <Route path="signin" element={<Login />} />
+        <Route path="/signin" element={<Login />} />
       </Routes>
       {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' ?
           <Footer /> : ''}

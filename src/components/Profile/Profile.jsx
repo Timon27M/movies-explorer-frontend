@@ -1,9 +1,10 @@
 import "./Profile.css";
+import { Link } from "react-router-dom"
 
 function Profile() {
   return (
     <section className="profile">
-      <div action="" className="profile__container">
+      <div className="profile__container">
         <h2 className="profile__title">Привет, Виталий!</h2>
         <div className="profile__content profile__content_type_name">
           <p className="profile__text profile__text_type_name">Имя</p>
@@ -27,9 +28,9 @@ function Profile() {
         <button type="button" className="profile__button profile__button-edit">
           Редактировать
         </button>
-        <button type="button" className="profile__button profile__button-exit">
+        <Link to="/" type="button" className="profile__button profile__button-exit">
           Выйти из аккаунта
-        </button>
+        </Link>
       </div>
     </section>
   );
