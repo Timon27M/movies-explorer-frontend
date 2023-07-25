@@ -39,7 +39,8 @@ function NavigationSite() {
               className={({ isActive }) =>
                 isActive
                   ? activeClassName + " navigationSite__main-item_type_home"
-                  : defaultClassNameMainItem + " navigationSite__main-item_type_home"
+                  : defaultClassNameMainItem +
+                    " navigationSite__main-item_type_home"
               }
             >
               Главная
@@ -47,10 +48,12 @@ function NavigationSite() {
             <NavLink
               to="/movies"
               className={({ isActive }) =>
-              isActive
-                ? activeClassName + " navigationSite__main-item_type_all-films"
-                : defaultClassNameMainItem + " navigationSite__main-item_type_all-films"
-            }
+                isActive
+                  ? activeClassName +
+                    " navigationSite__main-item_type_all-films"
+                  : defaultClassNameMainItem +
+                    " navigationSite__main-item_type_all-films"
+              }
             >
               Фильмы
             </NavLink>
@@ -58,19 +61,17 @@ function NavigationSite() {
               to="/saved-movies"
               activeClassName="navigationSite__main-item_active"
               className={({ isActive }) =>
-              isActive
-                ? activeClassName + " navigationSite__main-item_type_my-films"
-                : defaultClassNameMainItem + " navigationSite__main-item_type_my-films"
-            }
+                isActive
+                  ? activeClassName + " navigationSite__main-item_type_my-films"
+                  : defaultClassNameMainItem +
+                    " navigationSite__main-item_type_my-films"
+              }
             >
               Сохранённые фильмы
             </NavLink>
           </div>
           <div className="navigationSite__acc">
-            <NavLink
-              to="/profile"
-              className="navigationSite__profile"
-            >
+            <NavLink to="/profile" className="navigationSite__profile">
               <p className="navigationSite__profile-text">Аккаунт</p>
               <img
                 className="navigationSite__profile-img"

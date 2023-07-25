@@ -20,9 +20,8 @@
 }
 
 .promo__logo {
-    position: absolute;
+  position: absolute;
 }
-
 
 @media all and (max-width: 820px) {
   .promo {
@@ -48,5 +47,5 @@
     max-width: 320px;
     max-height: 248px;
     padding: 0 36px;
-}
+  }
 }

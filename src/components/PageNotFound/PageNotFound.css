@@ -45,28 +45,28 @@
 }
 
 .pageNotFound__link:hover {
-    opacity: 0.7;
+  opacity: 0.7;
 }
 
 @media all and (max-width: 820px) {
-    .pageNotFound__link {
-        bottom: 222px;
-      }
+  .pageNotFound__link {
+    bottom: 222px;
   }
-  
-  @media all and (max-width: 500px) {
-    .pageNotFound__title {
-        font-size: 80px;
-        margin-top: 10px;
-      }
+}
 
-      .pageNotFound__subtitle {
-        font-size: 12px;
-        margin-top: 10px;
-      }
-
-      .pageNotFound__link {
-        font-size: 12px;
-        bottom: 30px;
-      }
+@media all and (max-width: 500px) {
+  .pageNotFound__title {
+    font-size: 80px;
+    margin-top: 10px;
   }
+
+  .pageNotFound__subtitle {
+    font-size: 12px;
+    margin-top: 10px;
+  }
+
+  .pageNotFound__link {
+    font-size: 12px;
+    bottom: 30px;
+  }
+}

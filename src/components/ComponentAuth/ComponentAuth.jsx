@@ -26,7 +26,10 @@ function ComponentAuth({
         </div>
         <div className="componentAuth__container">
           <p className="componentAuth__container-text">{containerText}</p>
-          <Link to={containerLinkPath} className="componentAuth__container-link">
+          <Link
+            to={containerLinkPath}
+            className="componentAuth__container-link"
+          >
             {containerLinkName}
           </Link>
         </div>

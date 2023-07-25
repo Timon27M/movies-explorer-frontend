@@ -28,17 +28,21 @@ function AboutProject() {
 
       <div className="aboutProject__container">
         <div className="aboutProject__line aboutProject__line_type_green">
-            <h3 className="aboutProject__line-title aboutProject__line-title_type_green">1 неделя</h3>
-            <p className="aboutProject__line-info">Back-end</p>
+          <h3 className="aboutProject__line-title aboutProject__line-title_type_green">
+            1 неделя
+          </h3>
+          <p className="aboutProject__line-info">Back-end</p>
         </div>
 
         <div className="aboutProject__line aboutProject__line_type_white">
-            <h3 className="aboutProject__line-title aboutProject__line-title_type_white">4 неделя</h3>
-            <p className="aboutProject__line-info">Front-end</p>
+          <h3 className="aboutProject__line-title aboutProject__line-title_type_white">
+            4 неделя
+          </h3>
+          <p className="aboutProject__line-info">Front-end</p>
         </div>
       </div>
     </section>
   );
 }
 
-export default AboutProject
+export default AboutProject;

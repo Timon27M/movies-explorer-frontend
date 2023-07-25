@@ -1,5 +1,5 @@
 import "./App.css";
-import {  Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Header from "../Header/Header.jsx";
 import Footer from "../Footer/Footer";
 import Main from "../Main/Main";
@@ -14,18 +14,29 @@ function App() {
 
   return (
     <div className="App">
-      {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
-          <Header /> : ''}
+      {pathname === "/" ||
+      pathname === "/movies" ||
+      pathname === "/saved-movies" ||
+      pathname === "/profile" ? (
+        <Header />
+      ) : (
+        ""
+      )}
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/movies" element={<Movies />} />
         <Route path="/saved-movies" element={<SavedMovies />} />
-        <Route path="/profile" element={<Profile />}/>
+        <Route path="/profile" element={<Profile />} />
         <Route path="/signup" element={<Register />} />
         <Route path="/signin" element={<Login />} />
       </Routes>
-      {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' ?
-          <Footer /> : ''}
+      {pathname === "/" ||
+      pathname === "/movies" ||
+      pathname === "/saved-movies" ? (
+        <Footer />
+      ) : (
+        ""
+      )}
     </div>
   );
 }

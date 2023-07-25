@@ -57,24 +57,24 @@
 }
 
 .moviesCard__content:hover .moviesCard__button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    border-radius: 30px;
-    padding: 7px 6px;
-    max-height: 21px;
-    max-width: 72px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 30px;
+  padding: 7px 6px;
+  max-height: 21px;
+  max-width: 72px;
 }
 
 .moviesCard__content:hover .moviesCard__button_delete {
-    display: block;
-    background-image: url("../../images/buttonDeleteCard-min.svg");
-    background-position: center;
-    min-height: 22px;
-    min-width: 22px;
-    border-radius: 50px;
-    font-size: 0;
+  display: block;
+  background-image: url("../../images/buttonDeleteCard-min.svg");
+  background-position: center;
+  min-height: 22px;
+  min-width: 22px;
+  border-radius: 50px;
+  font-size: 0;
 }
 
 .moviesCard__button_active {

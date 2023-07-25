@@ -27,7 +27,8 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
 }
 
 .auth-text-error {

@@ -18,7 +18,7 @@
 }
 
 .NavTab__link:hover {
-    opacity: 0.7;
+  opacity: 0.7;
 }
 
 .NavTab__link:not(:last-child) {
