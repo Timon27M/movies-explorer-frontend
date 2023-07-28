@@ -36,6 +36,7 @@ function NavigationSite() {
           <div className="navigationSite__main">
             <NavLink
               to="/"
+              target="_blank"
               className={({ isActive }) =>
                 isActive
                   ? activeClassName + " navigationSite__main-item_type_home"
@@ -47,6 +48,7 @@ function NavigationSite() {
             </NavLink>
             <NavLink
               to="/movies"
+              target="_blank"
               className={({ isActive }) =>
                 isActive
                   ? activeClassName +
@@ -59,6 +61,7 @@ function NavigationSite() {
             </NavLink>
             <NavLink
               to="/saved-movies"
+              target="_blank"
               activeClassName="navigationSite__main-item_active"
               className={({ isActive }) =>
                 isActive
@@ -71,7 +74,11 @@ function NavigationSite() {
             </NavLink>
           </div>
           <div className="navigationSite__acc">
-            <NavLink to="/profile" className="navigationSite__profile">
+            <NavLink
+              to="/profile"
+              target="_blank"
+              className="navigationSite__profile"
+            >
               <p className="navigationSite__profile-text">Аккаунт</p>
               <img
                 className="navigationSite__profile-img"
