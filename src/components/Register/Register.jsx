@@ -1,23 +1,27 @@
 import "../AuthInputs/AuthInputs.css";
-import ComponentAuth from "../ComponentAuth/ComponentAuth";
 import { useState } from "react";
+import ComponentAuth from "../ComponentAuth/ComponentAuth";
+import useFormWithValidation from "../../utils/FormValidation";
 
 function Register({ registerAuth }) {
-  const [formValue, setFormValue] = useState({});
+  // const [formValue, setFormValue] = useState({});
 
-  const handleChange = (evt) => {
-    const { name, value } = evt.target;
+  // const handleChange = (evt) => {
+  //   const { name, value } = evt.target;
 
-    setFormValue({
-      ...formValue,
-      [name]: value,
-    });
-  };
+  //   setFormValue({
+  //     ...formValue,
+  //     [name]: value,
+  //   });
+  // };
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    registerAuth(formValue.name, formValue.email, formValue.password);
-  };
+  const { values, handleChange, errors, isValid} =
+    useFormWithValidation(); 
+
+    function handleSubmit(evt) {
+      evt.preventDefault();
+      registerAuth({name: values.name, email: values.email, password: values.password});
+    }
 
   return (
     <ComponentAuth
@@ -27,7 +31,8 @@ function Register({ registerAuth }) {
       containerText="Уже зарегистрированы?"
       containerLinkName="Войти"
       containerLinkPath="/signin"
-      onSubmit={handleSubmit}
+      isValid={isValid}
+      handleSubmit={handleSubmit}
     >
       <div className="auth-container">
         <div className="auth-content">
@@ -35,32 +40,39 @@ function Register({ registerAuth }) {
           <input
             type="text"
             name="name"
-            value={formValue.name || ""}
             onChange={handleChange}
+            value={values.name}
             className="auth-content__input"
+            minLength={2}
+            required
           />
         </div>
+          <span className="auth-text-error">{errors.name}</span>
         <div className="auth-content">
           <p className="auth-content__name">E-mail</p>
           <input
             type="email"
             name="email"
-            value={formValue.email || ""}
             onChange={handleChange}
+            value={values.email}
             className="auth-content__input"
+            required
           />
         </div>
+          <span className="auth-text-error">{errors.email}</span>
         <div className="auth-content">
           <p className="auth-content__name">Пароль</p>
           <input
             type="password"
             name="password"
-            value={formValue.password || ""}
             onChange={handleChange}
+            value={values.password}
             className="auth-content__input"
+            minLength={6}
+            required
           />
         </div>
-        <span className="auth-text-error">Что-то пошло не так...</span>
+      <span className="auth-text-error">{errors.password}</span>
       </div>
     </ComponentAuth>
   );

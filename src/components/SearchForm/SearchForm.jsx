@@ -1,7 +1,20 @@
 import "./SearchForm.css";
 import imgFind from "../../images/find-min.svg";
+import { useState } from 'react';
 
-function SearchForm() {
+function SearchForm({ handleSubmitSearchForm }) {
+
+  const [inputText, setInputText] = useState('')
+
+  function changeInput(evt) {
+    setInputText(evt.target.value);
+  }
+
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    handleSubmitSearchForm(inputText);
+  }
+
   return (
     <form className="search">
       <div className="search__contant">
@@ -10,8 +23,11 @@ function SearchForm() {
             type="text"
             className="search__input-text"
             placeholder="Фильм"
+            onChange={changeInput}
+            value={inputText || ''}
+            required
           />
-          <button type="button" className="search__button">
+          <button type="button" className="search__button" onClick={ handleSubmit }>
             <p className="search__button-text">Найти</p>
           </button>
         </div>

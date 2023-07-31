@@ -1,24 +1,34 @@
 import "../AuthInputs/AuthInputs.css";
 import ComponentAuth from "../ComponentAuth/ComponentAuth";
 import { useState } from "react";
+import useFormWithValidation from "../../utils/FormValidation";
 
 function Login({ loginAuth }) {
-  const [formValue, setFormValue] = useState({});
+  // const [formValue, setFormValue] = useState({});
 
-  const handleChange = (evt) => {
-    const { name, value } = evt.target;
+  // const handleChange = (evt) => {
+  //   const { name, value } = evt.target;
 
-    setFormValue({
-      ...formValue,
-      [name]: value,
-    });
-  };
+  //   setFormValue({
+  //     ...formValue,
+  //     [name]: value,
+  //   });
+  // };
 
-  const handleSubmit = (evt) => {
+  // const handleSubmit = (evt) => {
+  //   evt.preventDefault();
+
+  //   loginAuth(formValue.email, formValue.password);
+  // };
+
+  const { values, handleChange, errors, isValid} =
+  useFormWithValidation(); 
+
+  function handleSubmit(evt) {
     evt.preventDefault();
-
-    loginAuth(formValue.email, formValue.password);
-  };
+    loginAuth({ email: values.email, password: values.password })
+    
+  }
 
   return (
     <ComponentAuth
@@ -28,7 +38,8 @@ function Login({ loginAuth }) {
       containerText="Ещё не зарегистрированы?"
       containerLinkName="Регистрация"
       containerLinkPath="/signup"
-      onSubmit={handleSubmit}
+      handleSubmit={handleSubmit}
+      isValid={isValid}
     >
       <div className="auth-container">
         <div className="auth-content">
@@ -37,21 +48,22 @@ function Login({ loginAuth }) {
             type="email"
             className="auth-content__input"
             name="email"
-            value={formValue.email || ""}
+            value={values.email}
             onChange={handleChange}
           />
         </div>
+          <span className="auth-text-error">{errors.email}</span>
         <div className="auth-content">
           <p className="auth-content__name">Пароль</p>
           <input
             type="password"
             onChange={handleChange}
             name="password"
-            value={formValue.password || ""}
+            value={values.password}
             className="auth-content__input"
           />
         </div>
-        <span className="auth-text-error">Что-то пошло не так...</span>
+        <span className="auth-text-error">{errors.password}</span>
       </div>
     </ComponentAuth>
   );

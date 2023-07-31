@@ -15,6 +15,7 @@
 .componentAuth__content {
   text-align: left;
   min-width: 396px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -52,8 +53,17 @@
   border: none;
 }
 
+.componentAuth__button_disabled {
+  background-color: #F8F8F8;
+  color: #C2C2C2;
+}
+
 .componentAuth__button:hover {
   opacity: 0.7;
+}
+
+.componentAuth__button_disabled:hover {
+  opacity: 1;
 }
 
 .componentAuth__container {

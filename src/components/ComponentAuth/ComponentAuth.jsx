@@ -10,8 +10,11 @@ function ComponentAuth({
   containerLinkName,
   containerLinkPath,
   children,
-  onSubmit,
-}) {
+  handleSubmit,
+  isValid,
+}) 
+
+{
   return (
     <div className="componentAuth">
       <div className="componentAuth__main-block">
@@ -20,9 +23,16 @@ function ComponentAuth({
             <img src={logoImg} alt="логотип" className="componentAuth__logo" />
           </Link>
           <h2 className="componentAuth__title">{title}</h2>
-          <form className="componentAuth__form" onSubmit={onSubmit} name={formName} noValidate>
+          <form className="componentAuth__form" onSubmit={handleSubmit} name={formName} noValidate>
             {children}
-            <button className="componentAuth__button">{buttonText}</button>
+            <button
+              className={`componentAuth__button ${
+                !isValid && "componentAuth__button_disabled"
+              }`}
+              disabled={!isValid}
+            >
+              {buttonText}
+            </button>
           </form>
         </div>
         <div className="componentAuth__container">

@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+
 import Header from "../Header/Header.jsx";
 import Footer from "../Footer/Footer";
 import Main from "../Main/Main";
@@ -10,6 +11,7 @@ import Profile from "../Profile/Profile";
 import Register from "../Register/Register";
 import Login from "../Login/Login";
 import mainApi from "../../utils/MainApi";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 function App() {
   const { pathname } = useLocation();
@@ -18,11 +20,14 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  function registerAuth(name, email, password) {
+  function registerAuth({name, email, password}) {
     mainApi
-      .register(name, email, password)
+      .register({name, email, password})
       .then((res) => {
-        navigate("/signin", { replace: true });
+        console.log({name, email, password});
+        if (res.status === 200) {
+          navigate("/signin", { replace: true });
+        }
       })
       .catch((err) => {
         console.log(err); // выведем ошибку в консоль
@@ -30,17 +35,21 @@ function App() {
   }
 
   // функция авторизации
-  function loginAuth(email, password) {
+  function loginAuth({email, password}) {
     mainApi
-      .login(email, password)
+      .login({email, password})
       .then((res) => {
-        localStorage.setItem("jwt", res.token);
-        setIsLoggedIn(true);
-        navigate("/movies", { replace: true });
+        console.log(res)
+        console.log(email, password)
+        if (res.status === 200) {
+          localStorage.setItem("jwt", res.token);
+          setIsLoggedIn(true);
+          navigate("/movies", { replace: true });
+        }
       })
       .catch((err) => {
         console.log(err); // выведем ошибку в консоль
-      })
+      });
   }
 
   return (
@@ -55,11 +64,23 @@ function App() {
       )}
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/movies" element={<Movies />} />
-        <Route path="/saved-movies" element={<SavedMovies />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/signup" element={<Register registerAuth={registerAuth}/>} />
-        <Route path="/signin" element={<Login loginAuth={loginAuth}/>} />
+        <Route
+          path="/movies"
+          element={<ProtectedRoute element={Movies} />}
+        />
+        <Route
+          path="/saved-movies"
+          element={<ProtectedRoute element={SavedMovies} />}
+        />
+        <Route
+          path="/profile"
+          element={<ProtectedRoute element={Profile} />}
+        />
+        <Route
+          path="/signup"
+          element={<Register registerAuth={registerAuth} />}
+        />
+        <Route path="/signin" element={<Login loginAuth={loginAuth} />} />
       </Routes>
       {pathname === "/" ||
       pathname === "/movies" ||

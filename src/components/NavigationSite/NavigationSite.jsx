@@ -62,7 +62,6 @@ function NavigationSite() {
             <NavLink
               to="/saved-movies"
               target="_blank"
-              activeClassName="navigationSite__main-item_active"
               className={({ isActive }) =>
                 isActive
                   ? activeClassName + " navigationSite__main-item_type_my-films"
