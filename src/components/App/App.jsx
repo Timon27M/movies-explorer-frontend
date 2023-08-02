@@ -1,6 +1,12 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  redirect,
+} from "react-router-dom";
 
 import Header from "../Header/Header.jsx";
 import Footer from "../Footer/Footer";
@@ -19,12 +25,152 @@ function App() {
   const navigate = useNavigate();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
+  const [savedCards, setSavedCards] = useState(null);
+  const [updateSavedCards, setUpdateSavedCards] = useState(false);
 
-  function registerAuth({name, email, password}) {
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+
+    if (jwt) {
+      mainApi
+        .getUserInfo(jwt)
+        .then((res) => {
+          setIsLoggedIn(true);
+          navigate("/movies", { replace: true });
+        })
+        .catch((err) => {
+          console.log(err); // выведем ошибку в консоль
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    const localSavedMovies = localStorage.getItem("savedMovies");
+
+    if (!localSavedMovies) {
+      mainApi
+        .getMovies()
+        .then((res) => {
+          console.log(res);
+          localStorage.setItem("savedMovies", JSON.stringify(res));
+          setSavedCards(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setSavedCards(JSON.parse(localSavedMovies));
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (isLoggedIn === true) {
+      mainApi
+        .getUser()
+        .then((res) => {
+          setCurrentUser(res);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  }, [isLoggedIn]);
+
+  function buttonLikeClick(cardObj) {
+    const checkCard = savedCards.find((card) => {
+      return card.movieId === cardObj.id;
+    });
+
+    if (!checkCard) {
+      mainApi
+        .createMovie({
+          country: cardObj.country,
+          director: cardObj.director,
+          duration: cardObj.duration,
+          year: cardObj.year,
+          description: cardObj.description,
+          image: `https://api.nomoreparties.co${cardObj.image.url}`,
+          trailer: cardObj.trailerLink,
+          nameRU: cardObj.nameRU,
+          nameEN: cardObj.nameEN,
+          thumbnail: `https://api.nomoreparties.co${cardObj.image.formats.thumbnail.url}`,
+          movieId: cardObj.id,
+        })
+        .then((res) => {
+          localStorage.setItem(
+            "savedMovies",
+            JSON.stringify([res, ...savedCards])
+          );
+          setSavedCards([res, ...savedCards]);
+          cardObj.isLiked = true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      console.log(checkCard);
+      mainApi
+        .deleteMovie(checkCard._id)
+        .then((res) => {
+          localStorage.setItem(
+            "savedMovies",
+            JSON.stringify(
+              savedCards.filter(
+                (savedCard) => savedCard.movieId !== checkCard.movieId
+              )
+            )
+          );
+          setSavedCards(
+            savedCards.filter(
+              (savedCard) => savedCard.movieId !== checkCard.movieId
+            )
+          );
+          cardObj.isLiked = false;
+          console.log(cardObj);
+          console.log(savedCards);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
+  function buttonDeleteClick(cardObj) {
+    const checkCard = savedCards.find((card) => {
+      return card.movieId === cardObj.movieId;
+    });
+
+    const localSavedMovies = JSON.parse(localStorage.getItem("savedMovies"));
+
     mainApi
-      .register({name, email, password})
+      .deleteMovie(checkCard._id)
       .then((res) => {
-        console.log({name, email, password});
+        localStorage.setItem(
+          "savedMovies",
+          JSON.stringify(
+            localSavedMovies.filter(
+              (localSavedMovie) => localSavedMovie.movieId !== checkCard.movieId
+            )
+          )
+        );
+        setSavedCards(
+          savedCards.filter(
+            (savedCard) => savedCard.movieId !== checkCard.movieId
+          )
+        );
+        setUpdateSavedCards(!updateSavedCards)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function registerAuth({ name, email, password }) {
+    mainApi
+      .register({ name, email, password })
+      .then((res) => {
+        console.log({ name, email, password });
         if (res.status === 200) {
           navigate("/signin", { replace: true });
         }
@@ -35,21 +181,28 @@ function App() {
   }
 
   // функция авторизации
-  function loginAuth({email, password}) {
+  function loginAuth({ email, password }) {
     mainApi
-      .login({email, password})
+      .login({ email, password })
       .then((res) => {
-        console.log(res)
-        console.log(email, password)
-        if (res.status === 200) {
-          localStorage.setItem("jwt", res.token);
-          setIsLoggedIn(true);
-          navigate("/movies", { replace: true });
-        }
+        console.log(res);
+        console.log(email, password);
+        setIsLoggedIn(true);
+        localStorage.setItem("jwt", res.token);
+        navigate("/movies", { replace: true });
+        console.log(isLoggedIn);
       })
       .catch((err) => {
         console.log(err); // выведем ошибку в консоль
+      })
+      .finally(() => {
+        console.log(isLoggedIn);
       });
+  }
+
+  function signOut() {
+    localStorage.clear();
+    setIsLoggedIn(false);
   }
 
   return (
@@ -66,15 +219,37 @@ function App() {
         <Route path="/" element={<Main />} />
         <Route
           path="/movies"
-          element={<ProtectedRoute element={Movies} />}
+          element={
+            <ProtectedRoute
+              buttonLikeClick={buttonLikeClick}
+              isLoggedIn={isLoggedIn}
+              element={Movies}
+              savedCards={savedCards}
+            />
+          }
         />
         <Route
           path="/saved-movies"
-          element={<ProtectedRoute element={SavedMovies} />}
+          element={
+            <ProtectedRoute
+              isLoggedIn={isLoggedIn}
+              element={SavedMovies}
+              savedCards={savedCards}
+              buttonDeleteClick={buttonDeleteClick}
+              setSavedCards={setSavedCards}
+              updateSavedCards={updateSavedCards}
+            />
+          }
         />
         <Route
           path="/profile"
-          element={<ProtectedRoute element={Profile} />}
+          element={
+            <ProtectedRoute
+              isLoggedIn={isLoggedIn}
+              element={Profile}
+              onSignOut={signOut}
+            />
+          }
         />
         <Route
           path="/signup"

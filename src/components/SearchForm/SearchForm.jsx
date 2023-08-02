@@ -1,5 +1,4 @@
 import "./SearchForm.css";
-import imgFind from "../../images/find-min.svg";
 import { useState } from 'react';
 
 function SearchForm({ handleSubmitSearchForm }) {

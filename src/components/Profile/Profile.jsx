@@ -1,7 +1,7 @@
 import "./Profile.css";
 import { Link } from "react-router-dom";
 
-function Profile() {
+function Profile({ onSignOut }) {
   return (
     <section className="profile">
       <div className="profile__container">
@@ -32,6 +32,7 @@ function Profile() {
           to="/"
           type="button"
           className="profile__button profile__button-exit"
+          onClick={onSignOut}
         >
           Выйти из аккаунта
         </Link>

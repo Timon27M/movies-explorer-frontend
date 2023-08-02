@@ -13,7 +13,7 @@ function Header() {
         pathname === "/" ? "header_type_auth" : "header_type_site"
       }`}
     >
-      <Link className="header__link" to="/" target="_blank">
+      <Link className="header__link" to="/">
         <img className="header__logo" src={logoImg} alt="Логотип сайта"></img>
       </Link>
       {pathname === "/" ? <NavigationAuth /> : <NavigationSite />}

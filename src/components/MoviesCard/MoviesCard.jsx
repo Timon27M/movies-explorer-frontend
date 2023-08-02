@@ -1,8 +1,16 @@
 import "./MoviesCard.css";
 import { useLocation } from "react-router-dom";
-import mainApi from "../../utils/MainApi";
 
-function MoviesCard({ card, key, image, text, time, isLiked }) {
+function MoviesCard({
+  card,
+  key,
+  image,
+  text,
+  time,
+  buttonLikeClick,
+  buttonDeleteClick,
+  isLiked,
+}) {
   const { pathname } = useLocation();
 
   const cardLikeButtonName = `moviesCard__button ${
@@ -11,23 +19,13 @@ function MoviesCard({ card, key, image, text, time, isLiked }) {
 
   const newTime = `${Math.floor(time / 60)}ч ${time % 60}м`;
 
-  // const obj = {
-  //   email: 'tim22277@gmail.com',
-  //   password: '1234qwer'
-  // }
+  function handlebuttonLikeClick() {
+    buttonLikeClick(card);
+  }
 
-  // mainApi.login(obj)
-
-  // function buttonLikeClick() {
-  //   mainApi
-  //     .createMovie(card)
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-  // }
+  async function handlebuttonDeleteClick() {
+     buttonDeleteClick(card);
+  }
 
   const cardDeleteButtonName = `moviesCard__button moviesCard__button_delete`;
 
@@ -38,6 +36,11 @@ function MoviesCard({ card, key, image, text, time, isLiked }) {
         <button
           className={
             pathname === "/movies" ? cardLikeButtonName : cardDeleteButtonName
+          }
+          onClick={
+            pathname === "/movies"
+              ? handlebuttonLikeClick
+              : handlebuttonDeleteClick
           }
         >
           Сохранить
