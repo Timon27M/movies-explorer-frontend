@@ -109,7 +109,6 @@ function App() {
           console.log(err);
         });
     } else {
-      console.log(checkCard);
       mainApi
         .deleteMovie(checkCard._id)
         .then((res) => {
@@ -127,8 +126,6 @@ function App() {
             )
           );
           cardObj.isLiked = false;
-          console.log(cardObj);
-          console.log(savedCards);
         })
         .catch((err) => {
           console.log(err);
@@ -164,6 +161,24 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+    const handleChangeProfileForm = (evt) => {
+      evt.preventDefault();
+    setCurrentUser({
+      ...currentUser,
+      [evt.target.name]: evt.target.value,
+    });
+  };
+
+  function updateUserInfo({ name, email }) {
+    mainApi.updateUser({ name, email })
+    .then((res) => {
+      console.log({ name, email })
+    })
+    .catch((err) => {
+      console.log(err);
+    })
   }
 
   function registerAuth({ name, email, password }) {
@@ -211,7 +226,7 @@ function App() {
       pathname === "/movies" ||
       pathname === "/saved-movies" ||
       pathname === "/profile" ? (
-        <Header />
+        <Header isLoggedIn={isLoggedIn}/>
       ) : (
         ""
       )}
@@ -245,9 +260,12 @@ function App() {
           path="/profile"
           element={
             <ProtectedRoute
+            currentUser={currentUser}
               isLoggedIn={isLoggedIn}
               element={Profile}
               onSignOut={signOut}
+              handleChangeProfileForm={handleChangeProfileForm}
+              updateUserInfo={updateUserInfo}
             />
           }
         />

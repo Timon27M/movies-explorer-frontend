@@ -7,9 +7,11 @@ import { useState, useEffect } from "react";
 function Movies({ buttonLikeClick, savedCards }) {
   const [filmsObj, setFilmsObj] = useState([]);
   const [isRenderingFilms, setIsRenderingFilms] = useState(false);
+  const [isdownloadData, setisDownloadData] = useState(false)
 
   function handleSubmitSearchFormMain(inputText) {
     if (inputText) {
+        setisDownloadData(true);
       const dataFilms = moviesApi.getMovies();
       moviesApi.getMovies().then((data) => {
         const foundDataFilms = data.filter((dataFilm) => {
@@ -37,9 +39,16 @@ function Movies({ buttonLikeClick, savedCards }) {
 
         // console.log(savedCards);
         // console.log(newDataFilms);
+        localStorage.setItem("resultSearchMovies", inputText)
         setFilmsObj(newDataFilms);
         setIsRenderingFilms(true);
-      });
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setisDownloadData(false)
+      })
     }
   }
 
@@ -50,6 +59,7 @@ function Movies({ buttonLikeClick, savedCards }) {
         filmsObj={filmsObj}
         isRenderingFilms={isRenderingFilms}
         buttonLikeClick={buttonLikeClick}
+        isdownloadData={isdownloadData}
       />
     </div>
   );

@@ -4,7 +4,7 @@ import logoImg from "../../images/logo.svg";
 import NavigationAuth from "../NavigationAuth/NavigationAuth";
 import NavigationSite from "../NavigationSite/NavigationSite";
 
-function Header() {
+function Header({ isLoggedIn }) {
   const { pathname } = useLocation();
 
   return (
@@ -16,7 +16,7 @@ function Header() {
       <Link className="header__link" to="/">
         <img className="header__logo" src={logoImg} alt="Логотип сайта"></img>
       </Link>
-      {pathname === "/" ? <NavigationAuth /> : <NavigationSite />}
+      {!isLoggedIn ? <NavigationAuth /> : <NavigationSite />}
     </header>
   );
 }

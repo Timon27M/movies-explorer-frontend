@@ -1,18 +1,23 @@
 import "./NavigationSite.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import imgAcc from "../../images/img-Acc.svg";
 import imgButtonMenu from "../../images/icon-buttonMenu.svg";
 import imgCloseButtonMenu from "../../images/closeButtonMenu.svg";
+import imgButtonMenuWhite from "../../images/Menu-button-white.svg";
 
 function NavigationSite() {
   const [openMenu, setOpenMenu] = useState(false);
+
+  const { pathname } = useLocation();
 
   const showMenu = () => {
     setOpenMenu(!openMenu);
   };
 
-  const defaultClassNameMainItem = "navigationSite__main-item";
+  const defaultClassNameMainItem = `navigationSite__main-item ${
+    pathname === "/" && "navigationSite__main-item_type_main"
+  }`;
   const activeClassName =
     "navigationSite__main-item navigationSite__main-item_active";
 
@@ -23,7 +28,7 @@ function NavigationSite() {
       <button className="navigationSite__button" onClick={showMenu}>
         <img
           className="navigationSite__img-button"
-          src={imgButtonMenu}
+          src={pathname === "/" ? imgButtonMenuWhite : imgButtonMenu}
           alt="иконка"
         />
       </button>
@@ -72,7 +77,9 @@ function NavigationSite() {
           <div className="navigationSite__acc">
             <NavLink
               to="/profile"
-              className="navigationSite__profile"
+              className={`navigationSite__profile ${
+                pathname === "/" && "navigationSite__profile_type_main"
+              }`}
             >
               <p className="navigationSite__profile-text">Аккаунт</p>
               <img

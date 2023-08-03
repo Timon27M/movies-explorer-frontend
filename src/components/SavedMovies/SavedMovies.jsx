@@ -3,15 +3,18 @@ import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import { useState, useEffect } from "react";
 
 function SavedMovies({ savedCards, buttonDeleteClick, setSavedCards }) {
-  const [savedMovies, setSavedMovies] = useState(savedCards);
+  // const [savedMovies, setSavedMovies] = useState(savedCards);
+
+  const localSavedMovies = JSON.parse(localStorage.getItem("savedMovies"));
 
   function handleSubmitSearchForm(inputText) {
     if (inputText) {
-      const filmsSearch = savedCards.filter((savedCard) => {
+      console.log(savedCards)
+      const filmsSearch = localSavedMovies.filter((savedCard) => {
         const filmNameWords = savedCard.nameRU
           .toLowerCase()
           .split(/\ |\. |\:|\, |\!/);
-
+          console.log(savedCards)
         return filmNameWords.some((filmNameWord) => {
           return inputText.toLowerCase() === filmNameWord;
         });
@@ -19,7 +22,6 @@ function SavedMovies({ savedCards, buttonDeleteClick, setSavedCards }) {
 
       setSavedCards(filmsSearch);
     } else {
-      const localSavedMovies = JSON.parse(localStorage.getItem("savedMovies"));
       setSavedCards(localSavedMovies);
     }
   }

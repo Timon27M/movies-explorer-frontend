@@ -1,9 +1,22 @@
 import "./SearchForm.css";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from "react-router-dom";
 
 function SearchForm({ handleSubmitSearchForm }) {
 
+  const { pathname } = useLocation();
   const [inputText, setInputText] = useState('')
+
+useEffect(() => {
+  if (pathname === '/movies') {
+    const lastInputText = localStorage.getItem("resultSearchMovies")
+    handleSubmitSearchForm(lastInputText);
+    setInputText(lastInputText)
+  } else if (pathname === '/saved-movies') {
+    handleSubmitSearchForm('')
+  }
+}, [])
+
 
   function changeInput(evt) {
     setInputText(evt.target.value);
@@ -23,7 +36,7 @@ function SearchForm({ handleSubmitSearchForm }) {
             className="search__input-text"
             placeholder="Фильм"
             onChange={changeInput}
-            value={inputText || ''}
+            value={inputText}
             required
           />
           <button type="button" className="search__button" onClick={ handleSubmit }>

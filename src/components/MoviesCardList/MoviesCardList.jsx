@@ -3,17 +3,19 @@ import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import mainApi from "../../utils/MainApi";
+import Preloader from "../Preloader/Preloader"
 
 function MoviesCardList({
   filmsObj,
   isRenderingFilms,
   buttonLikeClick,
   buttonDeleteClick,
+  isdownloadData
 }) {
   const { pathname } = useLocation();
   return (
     <section className="moviesCardList">
-      {filmsObj.length > 0 && pathname === "/movies" ? (
+      {filmsObj.length > 0 && pathname === "/movies" && !isdownloadData ? (
         <div className="moviesCardList__elements">
           {filmsObj.map((card) => (
             <MoviesCard
@@ -29,13 +31,18 @@ function MoviesCardList({
         </div>
       ) : isRenderingFilms &&
         filmsObj.length === 0 &&
-        pathname === "/movies" ? (
+        pathname === "/movies" &&
+        !isdownloadData ? (
         <div className="moviesCardList__error">Не найдено</div>
       ) : (
         !isRenderingFilms && pathname === "/movies" && ""
       )}
 
-      {filmsObj.length > 5 && pathname === "/movies" && (
+      {isdownloadData && pathname === "/movies" && (
+        <Preloader />
+      )}
+
+      {filmsObj.length > 5 && pathname === "/movies" && !isdownloadData && (
         <button className="moviesCardList__button">Ещё</button>
       )}
 

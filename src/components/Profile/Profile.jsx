@@ -1,31 +1,41 @@
 import "./Profile.css";
 import { Link } from "react-router-dom";
 
-function Profile({ onSignOut }) {
+function Profile({ onSignOut, currentUser, handleChangeProfileForm, updateUserInfo }) {
+
+  function handelSubmitProfileForm(evt) {
+    evt.preventDefault()
+    updateUserInfo(currentUser)
+  }
+
   return (
     <section className="profile">
-      <div className="profile__container">
+      <form className="profile__container" id="profileForm" onSubmit={handelSubmitProfileForm}>
         <h2 className="profile__title">Привет, Виталий!</h2>
         <div className="profile__content profile__content_type_name">
           <p className="profile__text profile__text_type_name">Имя</p>
           <input
             type="text"
-            value="Виталий"
+            name="name"
+            value={currentUser.name}
             className="profile__input profile__input_type_name"
+            onChange={handleChangeProfileForm}
           />
         </div>
         <div className="profile__content profile__content_type_email">
           <p className="profile__text profile__text_type_email">E-mail</p>
           <input
             type="email"
-            value="pochta@yandex.ru"
+            name="email"
+            onChange={handleChangeProfileForm}
+            value={currentUser.email}
             className="profile__input profile__input_type_text"
           />
         </div>
-      </div>
+      </form>
 
       <div className="profile__buttons">
-        <button type="button" className="profile__button profile__button-edit">
+        <button type="submit" form="profileForm" className="profile__button profile__button-edit">
           Редактировать
         </button>
         <Link
