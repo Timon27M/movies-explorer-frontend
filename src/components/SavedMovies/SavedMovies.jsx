@@ -6,12 +6,14 @@ import { useSettingCardsRender } from "../../utils/useSettingCardsRender";
 function SavedMovies({ savedCards, clickButtonDelete, setSavedCards, addMoreCards }) {
   // const [savedMovies, setSavedMovies] = useState(savedCards);
 
-  const [savedFilmsObjRender, setSavedFilmsObjRender] = useState([]);
   const { settingsCardRender, isDownloadSettingCards } = useSettingCardsRender();
+  const [savedFilmsObjRender, setSavedFilmsObjRender] = useState([]);
 
-useEffect(() => {
-    console.log(settingsCardRender)
-})
+  useEffect(() => {
+      setSavedFilmsObjRender(localSavedMovies.slice(0, settingsCardRender.cardRender))
+      console.log(savedFilmsObjRender)
+      console.log(localSavedMovies.slice(0, settingsCardRender.cardRender))
+  }, [isDownloadSettingCards, window.innerWidth])
 
   const localSavedMovies = JSON.parse(localStorage.getItem("savedMovies"));
 
@@ -27,10 +29,14 @@ useEffect(() => {
           return inputText.toLowerCase() === filmNameWord;
         });
       });
-      setSavedFilmsObjRender(filmsSearch.slice(0, settingsCardRender.cardRender))
       setSavedCards(filmsSearch);
+      setSavedFilmsObjRender(filmsSearch.slice(0, settingsCardRender.cardRender))
     } else {
-      setSavedCards(localSavedMovies);
+      if (isDownloadSettingCards === false) {
+        setSavedCards(localSavedMovies);
+
+        setSavedFilmsObjRender(localSavedMovies.slice(0, settingsCardRender.cardRender))
+      }
     }
   }
 
@@ -42,9 +48,11 @@ useEffect(() => {
     <div className="savedMovies">
       <SearchForm handleSubmitSearchForm={handleSubmitSearchForm} />
       <MoviesCardList
+      settingsCardRender={settingsCardRender}
+      allSavedCards={savedCards}
         savedFilmsObjRender={savedFilmsObjRender}
         clickButtonDelete={clickButtonDelete}
-        handleClickMore={handleClickMore}
+        handleClickMoreSavedMovies={handleClickMore}
         isDownloadSettingCards={isDownloadSettingCards}
       />
     </div>

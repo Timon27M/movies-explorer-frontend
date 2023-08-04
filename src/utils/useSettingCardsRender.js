@@ -32,5 +32,5 @@ export function useSettingCardsRender() {
     addSettings();
   }, []);
 
-  return { settingsCardRender, isDownloadSettingCards }
+  return { settingsCardRender, isDownloadSettingCards, widthWindow }
 }

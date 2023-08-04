@@ -1,9 +1,10 @@
 import "./MoviesCardList.css";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import mainApi from "../../utils/MainApi";
 import Preloader from "../Preloader/Preloader";
+import { useSettingCardsRender } from "../../utils/useSettingCardsRender";
 
 function MoviesCardList({
   filmsObjRender,
@@ -13,12 +14,24 @@ function MoviesCardList({
   handleClickMore,
   savedFilmsObjRender,
   isDownloadSettingCards,
+  handleClickMoreSavedMovies,
+  allSavedCards,
+  allMovies,
+  settingsCardRender
 }) {
   const { pathname } = useLocation();
+
+  // const { settingsCardRender } = useSettingCardsRender();
+
+  const [maxMovie, setMaxMovie] = useState(0);
+  useEffect(() => {
+    setMaxMovie(settingsCardRender.cardRender);   
+  }, [window.innerWidth])
+
   return (
     <section className="moviesCardList">
-      {filmsObjRender.length > 0 &&
-      pathname === "/movies" &&
+      {pathname === "/movies" &&
+      filmsObjRender.length > 0 &&
       !isdownloadData ? (
         <div className="moviesCardList__elements">
           {filmsObjRender.map((card) => (
@@ -33,26 +46,26 @@ function MoviesCardList({
             />
           ))}
         </div>
-      ) : isdownloadData &&
-        filmsObjRender.length === 0 &&
-        pathname === "/movies" ? (
+      ) : pathname === "/movies" &&
+        !isdownloadData &&
+        filmsObjRender.length === 0 ? (
         <div className="moviesCardList__error">Не найдено</div>
       ) : (
-        !isdownloadData && pathname === "/movies" && ""
+        pathname === "/movies" && !isdownloadData && ""
       )}
 
-      {isdownloadData && pathname === "/movies" && <Preloader />}
+      {pathname === "/movies" && isdownloadData && <Preloader />}
 
-      {filmsObjRender.length > 5 &&
-        pathname === "/movies" &&
+      {pathname === "/movies" &&
+        allMovies.length > maxMovie &&
         !isdownloadData && (
           <button className="moviesCardList__button" onClick={handleClickMore}>
             Ещё
           </button>
         )}
 
-      {savedFilmsObjRender.length > 0 &&
-        pathname === "/saved-movies" &&
+      {pathname === "/saved-movies" &&
+        savedFilmsObjRender.length > 0 &&
         !isDownloadSettingCards && (
           <div className="moviesCardList__elements">
             {savedFilmsObjRender.map((card, i) => (
@@ -70,20 +83,19 @@ function MoviesCardList({
           </div>
         )}
 
-      {savedFilmsObjRender.length === 0 &&
-        pathname === "/saved-movies" &&
+      {pathname === "/saved-movies" &&
+        savedFilmsObjRender.length === 0 &&
         !isDownloadSettingCards && (
           <div className="moviesCardList__error">Не найдено</div>
         )}
 
-      {savedFilmsObjRender.length > 5 &&
-        pathname === "/saved-movies" &&
+      {pathname === "/saved-movies" &&
+        allSavedCards.length > maxMovie &&
         !isDownloadSettingCards && (
-          <button className="moviesCardList__button" onClick={handleClickMore}>
+          <button className="moviesCardList__button" onClick={handleClickMoreSavedMovies}>
             Ещё
           </button>
         )}
-
     </section>
   );
 }

@@ -13,6 +13,9 @@ function Movies({ clickButtonLike, savedCards, addMoreCards }) {
 
 const {  settingsCardRender, isDownloadSettingCards } = useSettingCardsRender();
 
+useEffect(() => {
+  setFilmsObjRender(filmsObj.slice(0, settingsCardRender.cardRender))
+}, [window.innerWidth])
 
 function handleSubmitSearchFormMain(inputText) {
     // console.log(settingsCardRender);
@@ -70,10 +73,12 @@ function handleSubmitSearchFormMain(inputText) {
     <div className="movies">
       <SearchForm isDownloadSettingCards={isDownloadSettingCards} handleSubmitSearchForm={handleSubmitSearchFormMain} />
       <MoviesCardList
+      allMovies={filmsObj}
         filmsObjRender={filmsObjRender}
         clickButtonLike={clickButtonLike}
         isdownloadData={isDownloadData}
         handleClickMore={handleClickMore}
+        settingsCardRender={settingsCardRender}
       />
     </div>
   );
