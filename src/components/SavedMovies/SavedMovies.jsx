@@ -6,8 +6,8 @@ import { useSettingCardsRender } from "../../utils/useSettingCardsRender";
 function SavedMovies({ savedCards, clickButtonDelete, setSavedCards, addMoreCards }) {
   // const [savedMovies, setSavedMovies] = useState(savedCards);
 
-  const {  settingsCardRender, isDownloadSettingCards } = useSettingCardsRender();
   const [savedFilmsObjRender, setSavedFilmsObjRender] = useState([]);
+  const { settingsCardRender, isDownloadSettingCards } = useSettingCardsRender();
 
 useEffect(() => {
     console.log(settingsCardRender)
@@ -37,8 +37,6 @@ useEffect(() => {
   function handleClickMore() {
     addMoreCards(savedCards, setSavedFilmsObjRender, settingsCardRender)
   }
-
-
 
   return (
     <div className="savedMovies">

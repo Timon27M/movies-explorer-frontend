@@ -26,7 +26,7 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
-  const [savedCards, setSavedCards] = useState(null);
+  const [savedCards, setSavedCards] = useState([]);
   const [updateSavedCards, setUpdateSavedCards] = useState(false);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function App() {
         .getUserInfo(jwt)
         .then((res) => {
           setIsLoggedIn(true);
-          navigate("/movies", { replace: true });
+          navigate("/saved-movies", { replace: true });
         })
         .catch((err) => {
           console.log(err); // выведем ошибку в консоль
