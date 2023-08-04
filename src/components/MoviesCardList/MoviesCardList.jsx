@@ -6,22 +6,25 @@ import mainApi from "../../utils/MainApi";
 import Preloader from "../Preloader/Preloader"
 
 function MoviesCardList({
-  filmsObj,
+  filmsObjRender,
   isRenderingFilms,
-  buttonLikeClick,
-  buttonDeleteClick,
-  isdownloadData
+  clickButtonLike,
+  clickButtonDelete,
+  isdownloadData,
+  handleClickMore,
+  savedFilmsObjRender,
+  isDownloadSettingCards,
 }) {
   const { pathname } = useLocation();
   return (
     <section className="moviesCardList">
-      {filmsObj.length > 0 && pathname === "/movies" && !isdownloadData ? (
-        <div className="moviesCardList__elements">
-          {filmsObj.map((card) => (
+      {filmsObjRender.length > 0 && pathname === "/movies" && !isdownloadData ? (
+        <div className="moviesCardList__elements"> 
+          {filmsObjRender.map((card) => (
             <MoviesCard
               card={card}
               key={card.id}
-              buttonLikeClick={buttonLikeClick}
+              clickButtonLike={clickButtonLike}
               image={`https://api.nomoreparties.co${card.image.url}`}
               text={card.nameRU}
               time={card.duration}
@@ -30,7 +33,7 @@ function MoviesCardList({
           ))}
         </div>
       ) : isRenderingFilms &&
-        filmsObj.length === 0 &&
+      filmsObjRender.length === 0 &&
         pathname === "/movies" &&
         !isdownloadData ? (
         <div className="moviesCardList__error">Не найдено</div>
@@ -38,17 +41,17 @@ function MoviesCardList({
         !isRenderingFilms && pathname === "/movies" && ""
       )}
 
-      {isdownloadData && pathname === "/movies" && (
+      {!isdownloadData && pathname === "/movies" && (
         <Preloader />
       )}
 
-      {filmsObj.length > 5 && pathname === "/movies" && !isdownloadData && (
-        <button className="moviesCardList__button">Ещё</button>
+      {filmsObjRender.length > 5 && pathname === "/movies" && !isdownloadData && (
+        <button className="moviesCardList__button" onClick={handleClickMore}>Ещё</button>
       )}
 
-      {filmsObj.length > 0 && pathname === "/saved-movies" && (
+      {savedFilmsObjRender.length > 0 && pathname === "/saved-movies" && !isDownloadSettingCards && (
         <div className="moviesCardList__elements">
-          {filmsObj.map((card, i) => (
+          {savedFilmsObjRender.map((card, i) => (
             <MoviesCard
               movieId={card.movieId}
               card={card}
@@ -57,13 +60,16 @@ function MoviesCardList({
               text={card.nameRU}
               time={card.duration}
               isLiked={card.isLiked}
-              buttonDeleteClick={buttonDeleteClick}
+              clickButtonDelete={clickButtonDelete}
             />
           ))}
         </div>
       )}
-      {filmsObj.length === 0 && pathname === "/saved-movies" && (
+      {savedFilmsObjRender.length === 0 && pathname === "/saved-movies" && !isDownloadSettingCards && (
         <div className="moviesCardList__error">Не найдено</div>
+      )}
+            {savedFilmsObjRender.length > 5 && pathname === "/saved-movies" && !isDownloadSettingCards && (
+        <button className="moviesCardList__button" onClick={handleClickMore}>Ещё</button>
       )}
     </section>
   );

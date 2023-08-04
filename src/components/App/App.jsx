@@ -77,7 +77,7 @@ function App() {
     }
   }, [isLoggedIn]);
 
-  function buttonLikeClick(cardObj) {
+  function clickButtonLike(cardObj) {
     const checkCard = savedCards.find((card) => {
       return card.movieId === cardObj.id;
     });
@@ -133,7 +133,16 @@ function App() {
     }
   }
 
-  function buttonDeleteClick(cardObj) {
+  function addMoreCards(filmsAll, setFilmsRender, settingsCardRender) {
+    setFilmsRender(
+      filmsAll.slice(
+        0,
+        (settingsCardRender.cardRender += settingsCardRender.cardRenderMore)
+      )
+    );
+  }
+
+  function clickButtonDelete(cardObj) {
     const checkCard = savedCards.find((card) => {
       return card.movieId === cardObj.movieId;
     });
@@ -156,15 +165,15 @@ function App() {
             (savedCard) => savedCard.movieId !== checkCard.movieId
           )
         );
-        setUpdateSavedCards(!updateSavedCards)
+        setUpdateSavedCards(!updateSavedCards);
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-    const handleChangeProfileForm = (evt) => {
-      evt.preventDefault();
+  const handleChangeProfileForm = (evt) => {
+    evt.preventDefault();
     setCurrentUser({
       ...currentUser,
       [evt.target.name]: evt.target.value,
@@ -172,13 +181,14 @@ function App() {
   };
 
   function updateUserInfo({ name, email }) {
-    mainApi.updateUser({ name, email })
-    .then((res) => {
-      console.log({ name, email })
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+    mainApi
+      .updateUser({ name, email })
+      .then((res) => {
+        console.log({ name, email });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function registerAuth({ name, email, password }) {
@@ -204,7 +214,7 @@ function App() {
         console.log(email, password);
         setIsLoggedIn(true);
         localStorage.setItem("jwt", res.token);
-        navigate("/movies", { replace: true });
+        navigate("/", { replace: true });
         console.log(isLoggedIn);
       })
       .catch((err) => {
@@ -226,7 +236,7 @@ function App() {
       pathname === "/movies" ||
       pathname === "/saved-movies" ||
       pathname === "/profile" ? (
-        <Header isLoggedIn={isLoggedIn}/>
+        <Header isLoggedIn={isLoggedIn} />
       ) : (
         ""
       )}
@@ -236,10 +246,11 @@ function App() {
           path="/movies"
           element={
             <ProtectedRoute
-              buttonLikeClick={buttonLikeClick}
+              clickButtonLike={clickButtonLike}
               isLoggedIn={isLoggedIn}
               element={Movies}
               savedCards={savedCards}
+              addMoreCards={addMoreCards}
             />
           }
         />
@@ -250,9 +261,10 @@ function App() {
               isLoggedIn={isLoggedIn}
               element={SavedMovies}
               savedCards={savedCards}
-              buttonDeleteClick={buttonDeleteClick}
+              clickButtonDelete={clickButtonDelete}
               setSavedCards={setSavedCards}
               updateSavedCards={updateSavedCards}
+              addMoreCards={addMoreCards}
             />
           }
         />
@@ -260,7 +272,7 @@ function App() {
           path="/profile"
           element={
             <ProtectedRoute
-            currentUser={currentUser}
+              currentUser={currentUser}
               isLoggedIn={isLoggedIn}
               element={Profile}
               onSignOut={signOut}

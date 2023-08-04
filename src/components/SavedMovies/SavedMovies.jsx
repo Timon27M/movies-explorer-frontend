@@ -1,9 +1,17 @@
 import SearchForm from "../SearchForm/SearchForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import { useState, useEffect } from "react";
+import { useSettingCardsRender } from "../../utils/useSettingCardsRender";
 
-function SavedMovies({ savedCards, buttonDeleteClick, setSavedCards }) {
+function SavedMovies({ savedCards, clickButtonDelete, setSavedCards, addMoreCards }) {
   // const [savedMovies, setSavedMovies] = useState(savedCards);
+
+  const {  settingsCardRender, isDownloadSettingCards } = useSettingCardsRender();
+  const [savedFilmsObjRender, setSavedFilmsObjRender] = useState([]);
+
+useEffect(() => {
+    console.log(settingsCardRender)
+})
 
   const localSavedMovies = JSON.parse(localStorage.getItem("savedMovies"));
 
@@ -19,11 +27,15 @@ function SavedMovies({ savedCards, buttonDeleteClick, setSavedCards }) {
           return inputText.toLowerCase() === filmNameWord;
         });
       });
-
+      setSavedFilmsObjRender(filmsSearch.slice(0, settingsCardRender.cardRender))
       setSavedCards(filmsSearch);
     } else {
       setSavedCards(localSavedMovies);
     }
+  }
+
+  function handleClickMore() {
+    addMoreCards(savedCards, setSavedFilmsObjRender, settingsCardRender)
   }
 
 
@@ -32,8 +44,10 @@ function SavedMovies({ savedCards, buttonDeleteClick, setSavedCards }) {
     <div className="savedMovies">
       <SearchForm handleSubmitSearchForm={handleSubmitSearchForm} />
       <MoviesCardList
-        filmsObj={savedCards}
-        buttonDeleteClick={buttonDeleteClick}
+        savedFilmsObjRender={savedFilmsObjRender}
+        clickButtonDelete={clickButtonDelete}
+        handleClickMore={handleClickMore}
+        isDownloadSettingCards={isDownloadSettingCards}
       />
     </div>
   );

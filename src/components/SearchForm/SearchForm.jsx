@@ -2,7 +2,7 @@ import "./SearchForm.css";
 import { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 
-function SearchForm({ handleSubmitSearchForm }) {
+function SearchForm({ handleSubmitSearchForm, isDownloadSettingCards }) {
 
   const { pathname } = useLocation();
   const [inputText, setInputText] = useState('')
@@ -15,7 +15,7 @@ useEffect(() => {
   } else if (pathname === '/saved-movies') {
     handleSubmitSearchForm('')
   }
-}, [])
+}, [isDownloadSettingCards])
 
 
   function changeInput(evt) {

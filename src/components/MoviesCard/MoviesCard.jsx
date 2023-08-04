@@ -7,8 +7,8 @@ function MoviesCard({
   image,
   text,
   time,
-  buttonLikeClick,
-  buttonDeleteClick,
+  clickButtonLike,
+  сlickButtonDelete,
   isLiked,
 }) {
   const { pathname } = useLocation();
@@ -20,11 +20,11 @@ function MoviesCard({
   const newTime = `${Math.floor(time / 60)}ч ${time % 60}м`;
 
   function handlebuttonLikeClick() {
-    buttonLikeClick(card);
+    clickButtonLike(card);
   }
 
   async function handlebuttonDeleteClick() {
-     buttonDeleteClick(card);
+    сlickButtonDelete(card);
   }
 
   const cardDeleteButtonName = `moviesCard__button moviesCard__button_delete`;
