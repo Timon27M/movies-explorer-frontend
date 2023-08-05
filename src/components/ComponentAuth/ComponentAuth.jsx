@@ -12,9 +12,10 @@ function ComponentAuth({
   children,
   handleSubmit,
   isValid,
-}) 
+  isServerError,
+}) {
+  // const classNameBlockServerError = `componentAuth__text-server-error ${!isServerError && 'componentAuth__text-server-error_active'}`
 
-{
   return (
     <div className="componentAuth">
       <div className="componentAuth__main-block">
@@ -23,16 +24,30 @@ function ComponentAuth({
             <img src={logoImg} alt="логотип" className="componentAuth__logo" />
           </Link>
           <h2 className="componentAuth__title">{title}</h2>
-          <form className="componentAuth__form" onSubmit={handleSubmit} name={formName} noValidate>
+          <form
+            className="componentAuth__form"
+            onSubmit={handleSubmit}
+            name={formName}
+            noValidate
+          >
             {children}
-            <button
-              className={`componentAuth__button ${
-                !isValid && "componentAuth__button_disabled"
-              }`}
-              disabled={!isValid}
-            >
-              {buttonText}
-            </button>
+            <div className="componentAuth__blockSubmitButton">
+              <span
+                className={`componentAuth__text-server-error ${
+                  isServerError && "componentAuth__text-server-error_active"
+                }`}
+              >
+                Произошла ошибка
+              </span>
+              <button
+                className={`componentAuth__button ${
+                  !isValid && "componentAuth__button_disabled"
+                }`}
+                disabled={!isValid}
+              >
+                {buttonText}
+              </button>
+            </div>
           </form>
         </div>
         <div className="componentAuth__container">

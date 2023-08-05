@@ -1,12 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import {
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-  redirect,
-} from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import Header from "../Header/Header.jsx";
 import Footer from "../Footer/Footer";
@@ -18,6 +12,7 @@ import Register from "../Register/Register";
 import Login from "../Login/Login";
 import mainApi from "../../utils/MainApi";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+import { CurrentUserContext } from "../../utils/CurrentUserContext";
 
 function App() {
   const { pathname } = useLocation();
@@ -28,54 +23,84 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [savedCards, setSavedCards] = useState([]);
   const [updateSavedCards, setUpdateSavedCards] = useState(false);
+  const [isServerError, setIsServerError] = useState(false);
+  const [isUseEffectGetMoviesOn, setIsUseEffectGetMoviesOn] = useState(false);
+
+  // useEffect(() => {
+  //   console.log(localStorage)
+  //   console.log(savedCards)
+  //   if (isLoggedIn === true) {
+  //     setIsUseEffectGetMoviesOn(true)
+  //   }
+  // }, [])
 
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
-
-    if (jwt) {
-      mainApi
-        .getUserInfo(jwt)
-        .then((res) => {
-          setIsLoggedIn(true);
-          navigate("/saved-movies", { replace: true });
-        })
-        .catch((err) => {
-          console.log(err); // выведем ошибку в консоль
-        });
-    }
-  }, []);
+      const jwt = localStorage.getItem("jwt");
+  console.log(jwt)
+      if (jwt) {
+        mainApi
+          .getUserInfo(jwt)
+          .then((res) => {
+            console.log(res)
+            setCurrentUser(res)
+            setIsLoggedIn(true);
+            navigate({ replace: true });
+          })
+          .catch((err) => {
+            console.log(err); // выведем ошибку в консоль
+          })
+      }
+  }, [isLoggedIn]);
 
   useEffect(() => {
-    const localSavedMovies = localStorage.getItem("savedMovies");
-
-    if (!localSavedMovies) {
+    if (isLoggedIn === true && isUseEffectGetMoviesOn === true) {
       mainApi
         .getMovies()
         .then((res) => {
-          console.log(res);
           localStorage.setItem("savedMovies", JSON.stringify(res));
           setSavedCards(res);
+          console.log(res)
         })
         .catch((err) => {
           console.log(err);
         });
-    } else {
-      setSavedCards(JSON.parse(localSavedMovies));
-    }
-  }, [isLoggedIn]);
+    } 
+  }, [isLoggedIn])
 
-  useEffect(() => {
-    if (isLoggedIn === true) {
-      mainApi
-        .getUser()
-        .then((res) => {
-          setCurrentUser(res);
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    }
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   const localSavedMovies = localStorage.getItem("savedMovies");
+
+  //   if (!localSavedMovies) {
+  //     mainApi
+  //       .getMovies()
+  //       .then((res) => {
+  //         localStorage.setItem("savedMovies", JSON.stringify(res));
+  //         setSavedCards(res);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   } else {
+  //     setSavedCards(JSON.parse(localSavedMovies));
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   if (isLoggedIn === true) {
+  //     mainApi
+  //       .getUser()
+  //       .then((res) => {
+  //         console.log(res);
+  //         setCurrentUser(res);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       })
+  //       .finally(() => {
+  //         console.log(currentUser)
+  //       })
+  //   } 
+  // }, [isLoggedIn]);
 
   function clickButtonLike(cardObj) {
     const checkCard = savedCards.find((card) => {
@@ -146,6 +171,7 @@ function App() {
     const checkCard = savedCards.find((card) => {
       return card.movieId === cardObj.movieId;
     });
+    console.log(checkCard);
 
     const localSavedMovies = JSON.parse(localStorage.getItem("savedMovies"));
 
@@ -184,7 +210,8 @@ function App() {
     mainApi
       .updateUser({ name, email })
       .then((res) => {
-        console.log({ name, email });
+        console.log(res);
+        setCurrentUser(res)
       })
       .catch((err) => {
         console.log(err);
@@ -196,12 +223,12 @@ function App() {
       .register({ name, email, password })
       .then((res) => {
         console.log({ name, email, password });
-        if (res.status === 200) {
-          navigate("/signin", { replace: true });
-        }
+        navigate("/signin", { replace: true });
+        setIsServerError(false);
       })
       .catch((err) => {
         console.log(err); // выведем ошибку в консоль
+        setIsServerError(true);
       });
   }
 
@@ -210,27 +237,34 @@ function App() {
     mainApi
       .login({ email, password })
       .then((res) => {
-        console.log(res);
-        console.log(email, password);
-        setIsLoggedIn(true);
+        console.log(res)
         localStorage.setItem("jwt", res.token);
-        navigate("/", { replace: true });
-        console.log(isLoggedIn);
+        setIsServerError(false);
+        setIsLoggedIn(true);
+        navigate("/movies", { replace: true });
       })
       .catch((err) => {
         console.log(err); // выведем ошибку в консоль
+        setIsServerError(true);
       })
       .finally(() => {
-        console.log(isLoggedIn);
-      });
+        console.log(currentUser)
+        setIsUseEffectGetMoviesOn(true)
+      })
   }
 
   function signOut() {
     localStorage.clear();
+    localStorage.removeItem('savedMovies')
+    localStorage.removeItem('jwt')
+    setCurrentUser({});
+    setSavedCards([]);
+    setIsUseEffectGetMoviesOn(false)
     setIsLoggedIn(false);
   }
 
   return (
+    <CurrentUserContext.Provider value={currentUser} >
     <div className="App">
       {pathname === "/" ||
       pathname === "/movies" ||
@@ -278,14 +312,25 @@ function App() {
               onSignOut={signOut}
               handleChangeProfileForm={handleChangeProfileForm}
               updateUserInfo={updateUserInfo}
+              setCurrentUser={setCurrentUser}
             />
           }
         />
         <Route
           path="/signup"
-          element={<Register registerAuth={registerAuth} />}
+          element={
+            <Register
+              registerAuth={registerAuth}
+              isServerError={isServerError}
+            />
+          }
         />
-        <Route path="/signin" element={<Login loginAuth={loginAuth} />} />
+        <Route
+          path="/signin"
+          element={
+            <Login loginAuth={loginAuth} isServerError={isServerError} />
+          }
+        />
       </Routes>
       {pathname === "/" ||
       pathname === "/movies" ||
@@ -295,6 +340,7 @@ function App() {
         ""
       )}
     </div>
+    </CurrentUserContext.Provider>
   );
 }
 

@@ -2,16 +2,28 @@ import "./SearchForm.css";
 import { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 
-function SearchForm({ handleSubmitSearchForm, isDownloadSettingCards }) {
+function SearchForm({ handleSubmitSearchForm, isDownloadSettingCards, onChangeCheckbox, isCheckedShortMovie, setIsLastInputSearch }) {
 
   const { pathname } = useLocation();
   const [inputText, setInputText] = useState('')
+  const [checkboxValue, setCheckboxValue] = useState(JSON.parse(localStorage.getItem('checkboxIsChecked')))
+
+  useEffect(() => {
+    const lastCheckboxIsChecked = JSON.parse(localStorage.getItem('checkboxIsChecked'))
+    setCheckboxValue(lastCheckboxIsChecked)
+  }, [])
 
 useEffect(() => {
   if (pathname === '/movies') {
-    const lastInputText = localStorage.getItem("resultSearchMovies")
-    handleSubmitSearchForm(lastInputText);
-    setInputText(lastInputText)
+    const lastInputText = localStorage.getItem("resultSearchMovies");
+    const lastCheckboxIsChecked = JSON.parse(localStorage.getItem('checkboxIsChecked'))
+    if (lastInputText) {
+      handleSubmitSearchForm(lastInputText, lastCheckboxIsChecked);
+      setInputText(lastInputText)
+      setIsLastInputSearch(true);
+    } else {
+      setIsLastInputSearch(false);
+    }
   } else if (pathname === '/saved-movies') {
     handleSubmitSearchForm('')
   }
@@ -24,7 +36,11 @@ useEffect(() => {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    handleSubmitSearchForm(inputText);
+    handleSubmitSearchForm(inputText, isCheckedShortMovie);
+  }
+
+  function handleChangeCheckbox(evt) {
+    onChangeCheckbox(evt.target.checked);
   }
 
   return (
@@ -49,6 +65,8 @@ useEffect(() => {
             type="checkbox"
             id="checkbox"
             className="search__parameter-checkbox"
+            onChange={handleChangeCheckbox}
+            checked={isCheckedShortMovie}
           />
           <label htmlFor="checkbox" className="search__parameter-label"></label>
         </div>

@@ -3,24 +3,7 @@ import ComponentAuth from "../ComponentAuth/ComponentAuth";
 import { useState } from "react";
 import useFormWithValidation from "../../utils/FormValidation";
 
-function Login({ loginAuth }) {
-  // const [formValue, setFormValue] = useState({});
-
-  // const handleChange = (evt) => {
-  //   const { name, value } = evt.target;
-
-  //   setFormValue({
-  //     ...formValue,
-  //     [name]: value,
-  //   });
-  // };
-
-  // const handleSubmit = (evt) => {
-  //   evt.preventDefault();
-
-  //   loginAuth(formValue.email, formValue.password);
-  // };
-
+function Login({ loginAuth, isServerError }) {
   const { values, handleChange, errors, isValid} =
   useFormWithValidation(); 
 
@@ -40,6 +23,7 @@ function Login({ loginAuth }) {
       containerLinkPath="/signup"
       handleSubmit={handleSubmit}
       isValid={isValid}
+      isServerError={isServerError}
     >
       <div className="auth-container">
         <div className="auth-content">

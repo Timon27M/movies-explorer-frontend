@@ -1,84 +1,107 @@
 import SearchForm from "../SearchForm/SearchForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import moviesApi from "../../utils/MoviesApi";
-import mainApi from "../../utils/MainApi";
 import { useState, useEffect } from "react";
-// import { CheckSettingsCardsRender } from "../../utils/settingsCardsRender";
 import { useSettingCardsRender } from "../../utils/useSettingCardsRender";
 
 function Movies({ clickButtonLike, savedCards, addMoreCards }) {
   const [filmsObj, setFilmsObj] = useState([]);
   const [isDownloadData, setIsDownloadData] = useState(false);
   const [filmsObjRender, setFilmsObjRender] = useState([]);
+  const [isLastInputSearch, setIsLastInputSearch] = useState(false);
+  const [isCheckedShortMovie, setIsCheckedShortMovie] = useState(false);
 
-const {  settingsCardRender, isDownloadSettingCards } = useSettingCardsRender();
+  const { settingsCardRender, isDownloadSettingCards } =
+    useSettingCardsRender();
 
-useEffect(() => {
-  setFilmsObjRender(filmsObj.slice(0, settingsCardRender.cardRender))
-}, [window.innerWidth])
+  useEffect(() => {
+    setFilmsObjRender(filmsObj.slice(0, settingsCardRender.cardRender));
+    setIsCheckedShortMovie(JSON.parse(localStorage.getItem('checkboxIsChecked')))
+  }, [window.innerWidth]);
 
-function handleSubmitSearchFormMain(inputText) {
-    // console.log(settingsCardRender);
+  function onChangeCheckbox(isChecked) {
+    setIsCheckedShortMovie(isChecked);
+  }
+
+  function checkArrayForTime(array) {
+    const newDataFilmsShortTime = array.filter((element) => {
+      return element.duration <= 40;
+    });
+    setFilmsObjRender(
+      newDataFilmsShortTime.slice(0, settingsCardRender.cardRender)
+    );
+    setIsLastInputSearch(true);
+    setFilmsObj(newDataFilmsShortTime);
+  }
+
+  function handleSubmitSearchFormMain(inputText, isChecked) {
     if (inputText) {
       setIsDownloadData(true);
-      const dataFilms = moviesApi.getMovies();
       moviesApi
-      .getMovies()
-      .then((data) => {
-        const foundDataFilms = data.filter((dataFilm) => {
-          const FilmNameWords = dataFilm.nameRU
-          .toLowerCase()
+        .getMovies()
+        .then((data) => {
+          const foundDataFilms = data.filter((dataFilm) => {
+            const FilmNameWords = dataFilm.nameRU
+              .toLowerCase()
               .split(/\ |\. |\:|\, |\!/);
-              return FilmNameWords.some((FilmNameWord) => {
-                return inputText.toLowerCase() === FilmNameWord;
-              });
+            return FilmNameWords.some((FilmNameWord) => {
+              return inputText.toLowerCase() === FilmNameWord;
             });
-            
-            // сравниваем два массива SavedCards и foundDataFilms
+          });
+
           const newDataFilms = foundDataFilms.map((foundDataFilm) => {
-            const savedInMyCards = savedCards.some((savedCard) => {
+            foundDataFilm.isLiked = savedCards.some((savedCard) => {
               return foundDataFilm.id === savedCard.movieId;
             });
-            if (savedInMyCards) {
-              foundDataFilm.isLiked = true;
-            } else {
-              foundDataFilm.isLiked = false;
-            }
 
             return foundDataFilm;
           });
+          localStorage.setItem(
+            "checkboxIsChecked",
+            JSON.stringify(isChecked)
+          );
           localStorage.setItem("resultSearchMovies", inputText);
-          setFilmsObjRender(newDataFilms.slice(0, settingsCardRender.cardRender))
-          setFilmsObj(newDataFilms);
-          console.log(newDataFilms.slice(0, settingsCardRender.cardRender))
+          if (isChecked) {
+            checkArrayForTime(newDataFilms);
+          } else {
+            setFilmsObj(newDataFilms);
+            setFilmsObjRender(
+              newDataFilms.slice(0, settingsCardRender.cardRender)
+            );
+            setIsLastInputSearch(true);
+          }
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
         })
         .finally(() => {
           setIsDownloadData(false);
         });
-      }
     }
-    
-    useEffect(() => {
-      console.log(filmsObjRender)
-    })
+  }
 
   function handleClickMore() {
-    addMoreCards(filmsObj, setFilmsObjRender, settingsCardRender)
+    addMoreCards(filmsObj, setFilmsObjRender, settingsCardRender);
   }
 
   return (
     <div className="movies">
-      <SearchForm isDownloadSettingCards={isDownloadSettingCards} handleSubmitSearchForm={handleSubmitSearchFormMain} />
+      <SearchForm
+        isDownloadSettingCards={isDownloadSettingCards}
+        handleSubmitSearchForm={handleSubmitSearchFormMain}
+        setIsLastInputSearch={setIsLastInputSearch}
+        isLastInputSearch={isLastInputSearch}
+        onChangeCheckbox={onChangeCheckbox}
+        isCheckedShortMovie={isCheckedShortMovie}
+      />
       <MoviesCardList
-      allMovies={filmsObj}
+        allMovies={filmsObj}
         filmsObjRender={filmsObjRender}
         clickButtonLike={clickButtonLike}
         isdownloadData={isDownloadData}
         handleClickMore={handleClickMore}
         settingsCardRender={settingsCardRender}
+        isLastInputSearch={isLastInputSearch}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 
-//хук управления формой и валидации формы
+//хук валидации формы
 function useFormWithValidation() {
   const [values, setValues] = React.useState({});
   const [errors, setErrors] = React.useState({});
@@ -24,7 +24,7 @@ function useFormWithValidation() {
     [setValues, setErrors, setIsValid]
   );
 
-  return { values, handleChange, errors, isValid, resetForm };
+  return { values, handleChange, errors, isValid, resetForm, setValues, setIsValid };
 }
 
 export default useFormWithValidation;

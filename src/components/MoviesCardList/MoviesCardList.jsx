@@ -2,9 +2,7 @@ import "./MoviesCardList.css";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MoviesCard from "../MoviesCard/MoviesCard";
-import mainApi from "../../utils/MainApi";
 import Preloader from "../Preloader/Preloader";
-import { useSettingCardsRender } from "../../utils/useSettingCardsRender";
 
 function MoviesCardList({
   filmsObjRender,
@@ -17,7 +15,8 @@ function MoviesCardList({
   handleClickMoreSavedMovies,
   allSavedCards,
   allMovies,
-  settingsCardRender
+  settingsCardRender,
+  isLastInputSearch
 }) {
   const { pathname } = useLocation();
 
@@ -25,7 +24,7 @@ function MoviesCardList({
 
   const [maxMovie, setMaxMovie] = useState(0);
   useEffect(() => {
-    setMaxMovie(settingsCardRender.cardRender);   
+    setMaxMovie(settingsCardRender.cardRender);  
   }, [window.innerWidth])
 
   return (
@@ -43,12 +42,14 @@ function MoviesCardList({
               text={card.nameRU}
               time={card.duration}
               isLiked={card.isLiked}
+              trailerLink={card.trailerLink}
             />
           ))}
         </div>
       ) : pathname === "/movies" &&
         !isdownloadData &&
-        filmsObjRender.length === 0 ? (
+        filmsObjRender.length === 0 &&
+        isLastInputSearch === true ? (
         <div className="moviesCardList__error">Не найдено</div>
       ) : (
         pathname === "/movies" && !isdownloadData && ""
@@ -76,6 +77,7 @@ function MoviesCardList({
                 image={card.image}
                 text={card.nameRU}
                 time={card.duration}
+                trailerLink={card.trailer}
                 isLiked={card.isLiked}
                 clickButtonDelete={clickButtonDelete}
               />

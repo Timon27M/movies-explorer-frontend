@@ -3,17 +3,7 @@ import { useState } from "react";
 import ComponentAuth from "../ComponentAuth/ComponentAuth";
 import useFormWithValidation from "../../utils/FormValidation";
 
-function Register({ registerAuth }) {
-  // const [formValue, setFormValue] = useState({});
-
-  // const handleChange = (evt) => {
-  //   const { name, value } = evt.target;
-
-  //   setFormValue({
-  //     ...formValue,
-  //     [name]: value,
-  //   });
-  // };
+function Register({ registerAuth, isServerError }) {
 
   const { values, handleChange, errors, isValid} =
     useFormWithValidation(); 
@@ -33,6 +23,7 @@ function Register({ registerAuth }) {
       containerLinkPath="/signin"
       isValid={isValid}
       handleSubmit={handleSubmit}
+      isServerError={isServerError}
     >
       <div className="auth-container">
         <div className="auth-content">

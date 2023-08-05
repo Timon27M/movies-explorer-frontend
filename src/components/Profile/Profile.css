@@ -48,6 +48,8 @@
 .profile__buttons {
   display: flex;
   flex-direction: column;
+  max-width: 410px;
+  width: 100%;
 }
 
 .profile__text {
@@ -89,8 +91,25 @@
   text-decoration: none;
 }
 
-.profile__button:hover {
-  opacity: 0.7;
+.profile__button-edit {
+  cursor:default;
+  width: 100%;
+  color: #000;
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  padding: 15px 0;
+  border-radius: 3px;
+  border: none;
+}
+
+.profile__button-edit_active {
+  cursor: pointer;
+  background-color: #3456f3;
+  color: #FFF;
 }
 
 .profile__button-exit {

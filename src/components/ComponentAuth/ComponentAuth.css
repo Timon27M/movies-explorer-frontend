@@ -53,6 +53,20 @@
   border: none;
 }
 
+.componentAuth__text-server-error {
+  display: none;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  color: #ff3055;
+}
+
+.componentAuth__text-server-error_active {
+  display: block;
+}
+
 .componentAuth__button_disabled {
   background-color: #F8F8F8;
   color: #C2C2C2;

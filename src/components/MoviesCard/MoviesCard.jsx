@@ -1,5 +1,6 @@
 import "./MoviesCard.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
+import { useEffect } from "react";
 
 function MoviesCard({
   card,
@@ -7,8 +8,9 @@ function MoviesCard({
   image,
   text,
   time,
+  trailerLink,
   clickButtonLike,
-  сlickButtonDelete,
+  clickButtonDelete,
   isLiked,
 }) {
   const { pathname } = useLocation();
@@ -23,8 +25,9 @@ function MoviesCard({
     clickButtonLike(card);
   }
 
-  async function handlebuttonDeleteClick() {
-    сlickButtonDelete(card);
+  function handlebuttonDeleteClick() {
+    console.log(card)
+    clickButtonDelete(card);
   }
 
   const cardDeleteButtonName = `moviesCard__button moviesCard__button_delete`;
@@ -32,7 +35,9 @@ function MoviesCard({
   return (
     <div key={key} id="moviesCard" className="moviesCard">
       <div className="moviesCard__content" key={key}>
-        <img src={image} alt="картинка" className="moviesCard__image" />
+        <Link className="moviesCard__trailer-link" to={trailerLink} target="_blank">
+          <img src={image} alt="картинка" className="moviesCard__image" />
+        </Link>
         <button
           className={
             pathname === "/movies" ? cardLikeButtonName : cardDeleteButtonName

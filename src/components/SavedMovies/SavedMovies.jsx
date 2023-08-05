@@ -3,53 +3,97 @@ import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import { useState, useEffect } from "react";
 import { useSettingCardsRender } from "../../utils/useSettingCardsRender";
 
-function SavedMovies({ savedCards, clickButtonDelete, setSavedCards, addMoreCards }) {
-  // const [savedMovies, setSavedMovies] = useState(savedCards);
+function SavedMovies({
+  savedCards,
+  clickButtonDelete,
+  setSavedCards,
+  addMoreCards,
+  updateSavedCards,
+  isLoggedIn
+}) {
 
-  const { settingsCardRender, isDownloadSettingCards } = useSettingCardsRender();
+  const [isCheckedShortMovie, setIsCheckedShortMovie] = useState(false);
   const [savedFilmsObjRender, setSavedFilmsObjRender] = useState([]);
-
-  useEffect(() => {
-      setSavedFilmsObjRender(localSavedMovies.slice(0, settingsCardRender.cardRender))
-      console.log(savedFilmsObjRender)
-      console.log(localSavedMovies.slice(0, settingsCardRender.cardRender))
-  }, [isDownloadSettingCards, window.innerWidth])
+  
+  const { settingsCardRender, isDownloadSettingCards } =
+    useSettingCardsRender();
 
   const localSavedMovies = JSON.parse(localStorage.getItem("savedMovies"));
 
-  function handleSubmitSearchForm(inputText) {
+  useEffect(() => {
+    console.log(localSavedMovies)
+  }, [])
+
+useEffect(() => {
+  setSavedFilmsObjRender(
+    localSavedMovies.slice(0, settingsCardRender.cardRender)
+  );
+}, [isDownloadSettingCards, window.innerWidth, updateSavedCards]);
+
+  function onChangeCheckbox(isChecked) {
+    setIsCheckedShortMovie(isChecked);
+  }
+
+
+  function checkArrayForTime(array) {
+    const newSavedFilmsShortTime = array.filter((element) => {
+      return element.duration <= 40;
+    });
+
+    setSavedFilmsObjRender(
+      newSavedFilmsShortTime.slice(0, settingsCardRender.cardRender)
+    );
+    setSavedCards(newSavedFilmsShortTime);
+  }
+
+  function handleSubmitSearchForm(inputText, isChecked) {
     if (inputText) {
-      console.log(savedCards)
       const filmsSearch = localSavedMovies.filter((savedCard) => {
         const filmNameWords = savedCard.nameRU
           .toLowerCase()
           .split(/\ |\. |\:|\, |\!/);
-          console.log(savedCards)
         return filmNameWords.some((filmNameWord) => {
           return inputText.toLowerCase() === filmNameWord;
         });
       });
-      setSavedCards(filmsSearch);
-      setSavedFilmsObjRender(filmsSearch.slice(0, settingsCardRender.cardRender))
+
+      if (isChecked) {
+        checkArrayForTime(filmsSearch);
+      } else {
+        setSavedCards(filmsSearch);
+        setSavedFilmsObjRender(
+          filmsSearch.slice(0, settingsCardRender.cardRender)
+        );
+      }
     } else {
       if (isDownloadSettingCards === false) {
-        setSavedCards(localSavedMovies);
+        if (isChecked) {
+          checkArrayForTime(localSavedMovies)
+        } else {
+          setSavedCards(localSavedMovies);
+          setSavedFilmsObjRender(
+            localSavedMovies.slice(0, settingsCardRender.cardRender)
+          );
+        }
 
-        setSavedFilmsObjRender(localSavedMovies.slice(0, settingsCardRender.cardRender))
       }
     }
   }
 
   function handleClickMore() {
-    addMoreCards(savedCards, setSavedFilmsObjRender, settingsCardRender)
+    addMoreCards(savedCards, setSavedFilmsObjRender, settingsCardRender);
   }
 
   return (
     <div className="savedMovies">
-      <SearchForm handleSubmitSearchForm={handleSubmitSearchForm} />
+      <SearchForm
+        handleSubmitSearchForm={handleSubmitSearchForm}
+        isCheckedShortMovie={isCheckedShortMovie}
+        onChangeCheckbox={onChangeCheckbox}
+      />
       <MoviesCardList
-      settingsCardRender={settingsCardRender}
-      allSavedCards={savedCards}
+        settingsCardRender={settingsCardRender}
+        allSavedCards={savedCards}
         savedFilmsObjRender={savedFilmsObjRender}
         clickButtonDelete={clickButtonDelete}
         handleClickMoreSavedMovies={handleClickMore}
