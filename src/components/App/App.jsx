@@ -52,7 +52,7 @@ function App() {
     } else {
       setIsLoggedIn(false)
     }
-  }, [])
+  }, [isLoggedIn])
 
   // useEffect(() => {
   //     const jwt = localStorage.getItem("jwt");
@@ -278,12 +278,9 @@ function App() {
   // }
 
   function signOut() {
-    setSavedCards([]);
     localStorage.clear();
-    // localStorage.removeItem('savedMovies')
-    // localStorage.removeItem('jwt')
+    setSavedCards([]);
     setCurrentUser({});
-    // setIsUseEffectGetMoviesOn(false)
     setIsLoggedIn(false);
   }
 

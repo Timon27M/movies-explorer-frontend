@@ -26,6 +26,7 @@ export function useSettingCardsRender() {
   useEffect(() => {
     window.addEventListener("resize", changeWindowWidth);
     addSettings();
+    return () => window.removeEventListener('resize', changeWindowWidth);
   }, [widthWindow]);
 
   useEffect(() => {
