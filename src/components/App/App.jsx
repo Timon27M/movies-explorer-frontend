@@ -1,6 +1,12 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import { Route, Routes, useLocation, useNavigate, redirect } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  redirect,
+} from "react-router-dom";
 
 import Header from "../Header/Header.jsx";
 import Footer from "../Footer/Footer";
@@ -24,35 +30,69 @@ function App() {
   const [savedCards, setSavedCards] = useState([]);
   const [updateSavedCards, setUpdateSavedCards] = useState(false);
   const [isServerError, setIsServerError] = useState(false);
- 
+  const [localStorageToken, setLocalStorageToken] = useState(null);
 
   useEffect(() => {
-    console.log(isLoggedIn)
-    console.log(savedCards)
-    console.log(localStorage.getItem("jwt"))
-  })
+    console.log(isLoggedIn);
+    console.log(savedCards);
+    console.log(localStorage.getItem("jwt"));
+  });
 
-  function getMainData() {
-    Promise.all([mainApi.getUser(), mainApi.getMovies()])
-    .then(([userInfo, savedMovies]) => {
-      setCurrentUser(userInfo)
-      setSavedCards(savedMovies)
-    })
-    .catch((err) => console.log(err))
-    .finally(() => {
-      console.log(savedCards)
-    })
+  function getMainData(jwt) {
+    Promise.all([mainApi.getUserInfo(jwt), mainApi.getMovies(jwt)])
+      .then(([userInfo, savedMovies]) => {
+        setCurrentUser(userInfo);
+        setSavedCards(savedMovies);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        console.log(savedCards);
+      });
   }
-  
+
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
+    setLocalStorageToken(jwt);
     if (jwt) {
-      getMainData()
+      getMainData(jwt);
       setIsLoggedIn(true);
     } else {
-      setIsLoggedIn(false)
+      setIsLoggedIn(false);
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn]);
+
+  // useEffect(() => {
+  //   const jwt = localStorage.getItem("jwt");
+  //   if (jwt) {
+  //     mainApi.getUserInfo(jwt)
+  //     .then((res) => {
+  //       setCurrentUser(res);
+  //       setIsLoggedIn(true);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     })
+  //     .finally(() => {
+  //       console.log(isLoggedIn)
+  //       console.log(currentUser)
+  //     })
+  //   } else {
+  //     setIsLoggedIn(false);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   const jwt = localStorage.getItem("jwt");
+  //   if (jwt) {
+  //     mainApi.getMovies()
+  //     .then((res) => {
+  //       setSavedCards(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  //   }
+  // }, [localStorageToken])
 
   // useEffect(() => {
   //     const jwt = localStorage.getItem("jwt");
@@ -90,7 +130,7 @@ function App() {
   // //       .catch((err) => {
   // //         console.log(err);
   // //       });
-  // //   } 
+  // //   }
   // // }, [])
 
   // useEffect(() => {
@@ -119,32 +159,33 @@ function App() {
   //       .finally(() => {
   //         console.log(currentUser)
   //       })
-  //   } 
+  //   }
   // }, [isLoggedIn]);
 
-    // функция авторизации
-    function loginAuth({ email, password }) {
-      mainApi
-        .login({ email, password })
-        .then((res) => {
-          localStorage.setItem("jwt", res.token);
-          navigate("/movies", { replace: true });
-        })
-        .catch((err) => {
-          console.log(err); // выведем ошибку в консоль
-          setIsServerError(true);
-        })
-        .finally(() => {
-          const jwt = localStorage.getItem("jwt");
-
-          if (jwt) {
-            getMainData()
-            setIsLoggedIn(true);
-          } else {
-            setIsLoggedIn(false)
-          }
-        })
-    }
+  // функция авторизации
+  function loginAuth({ email, password }) {
+    mainApi
+      .login({ email, password })
+      .then((res) => {
+        localStorage.setItem("jwt", res.token);
+        navigate("/movies", { replace: true });
+        setIsLoggedIn(true);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err); // выведем ошибку в консоль
+        setIsServerError(true);
+      })
+      .finally(() => {
+        // const jwt = localStorage.getItem("jwt");
+        // if (jwt) {
+        //   getMainData(jwt)
+        //   setIsLoggedIn(true);
+        // } else {
+        //   setIsLoggedIn(false)
+        // }
+      });
+  }
 
   function clickButtonLike(cardObj) {
     const checkCard = savedCards.find((card) => {
@@ -153,19 +194,22 @@ function App() {
 
     if (!checkCard) {
       mainApi
-        .createMovie({
-          country: cardObj.country,
-          director: cardObj.director,
-          duration: cardObj.duration,
-          year: cardObj.year,
-          description: cardObj.description,
-          image: `https://api.nomoreparties.co${cardObj.image.url}`,
-          trailer: cardObj.trailerLink,
-          nameRU: cardObj.nameRU,
-          nameEN: cardObj.nameEN,
-          thumbnail: `https://api.nomoreparties.co${cardObj.image.formats.thumbnail.url}`,
-          movieId: cardObj.id,
-        })
+        .createMovie(
+          {
+            country: cardObj.country,
+            director: cardObj.director,
+            duration: cardObj.duration,
+            year: cardObj.year,
+            description: cardObj.description,
+            image: `https://api.nomoreparties.co${cardObj.image.url}`,
+            trailer: cardObj.trailerLink,
+            nameRU: cardObj.nameRU,
+            nameEN: cardObj.nameEN,
+            thumbnail: `https://api.nomoreparties.co${cardObj.image.formats.thumbnail.url}`,
+            movieId: cardObj.id,
+          },
+          localStorageToken
+        )
         .then((res) => {
           setSavedCards([res, ...savedCards]);
           cardObj.isLiked = true;
@@ -175,7 +219,7 @@ function App() {
         });
     } else {
       mainApi
-        .deleteMovie(checkCard._id)
+        .deleteMovie(checkCard._id, localStorageToken)
         .then((res) => {
           setSavedCards(
             savedCards.filter(
@@ -206,7 +250,7 @@ function App() {
     console.log(checkCard);
 
     mainApi
-      .deleteMovie(checkCard._id)
+      .deleteMovie(checkCard._id, localStorageToken)
       .then((res) => {
         setSavedCards(
           savedCards.filter(
@@ -230,10 +274,10 @@ function App() {
 
   function updateUserInfo({ name, email }) {
     mainApi
-      .updateUser({ name, email })
+      .updateUser({ name, email }, localStorageToken)
       .then((res) => {
         console.log(res);
-        setCurrentUser(res)
+        setCurrentUser(res);
       })
       .catch((err) => {
         console.log(err);
@@ -282,85 +326,86 @@ function App() {
     setSavedCards([]);
     setCurrentUser({});
     setIsLoggedIn(false);
+    setLocalStorageToken(null);
   }
 
   return (
-    <CurrentUserContext.Provider value={currentUser} >
-    <div className="App">
-      {pathname === "/" ||
-      pathname === "/movies" ||
-      pathname === "/saved-movies" ||
-      pathname === "/profile" ? (
-        <Header isLoggedIn={isLoggedIn} />
-      ) : (
-        ""
-      )}
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route
-          path="/movies"
-          element={
-            <ProtectedRoute
-              clickButtonLike={clickButtonLike}
-              isLoggedIn={isLoggedIn}
-              element={Movies}
-              savedCards={savedCards}
-              addMoreCards={addMoreCards}
-            />
-          }
-        />
-        <Route
-          path="/saved-movies"
-          element={
-            <ProtectedRoute
-              isLoggedIn={isLoggedIn}
-              element={SavedMovies}
-              savedCards={savedCards}
-              clickButtonDelete={clickButtonDelete}
-              setSavedCards={setSavedCards}
-              updateSavedCards={updateSavedCards}
-              addMoreCards={addMoreCards}
-            />
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute
-              currentUser={currentUser}
-              isLoggedIn={isLoggedIn}
-              element={Profile}
-              onSignOut={signOut}
-              handleChangeProfileForm={handleChangeProfileForm}
-              updateUserInfo={updateUserInfo}
-              setCurrentUser={setCurrentUser}
-            />
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <Register
-              registerAuth={registerAuth}
-              isServerError={isServerError}
-            />
-          }
-        />
-        <Route
-          path="/signin"
-          element={
-            <Login loginAuth={loginAuth} isServerError={isServerError} />
-          }
-        />
-      </Routes>
-      {pathname === "/" ||
-      pathname === "/movies" ||
-      pathname === "/saved-movies" ? (
-        <Footer />
-      ) : (
-        ""
-      )}
-    </div>
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="App">
+        {pathname === "/" ||
+        pathname === "/movies" ||
+        pathname === "/saved-movies" ||
+        pathname === "/profile" ? (
+          <Header isLoggedIn={isLoggedIn} />
+        ) : (
+          ""
+        )}
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route
+            path="/movies"
+            element={
+              <ProtectedRoute
+                clickButtonLike={clickButtonLike}
+                isLoggedIn={isLoggedIn}
+                element={Movies}
+                savedCards={savedCards}
+                addMoreCards={addMoreCards}
+              />
+            }
+          />
+          <Route
+            path="/saved-movies"
+            element={
+              <ProtectedRoute
+                isLoggedIn={isLoggedIn}
+                element={SavedMovies}
+                savedCards={savedCards}
+                clickButtonDelete={clickButtonDelete}
+                setSavedCards={setSavedCards}
+                updateSavedCards={updateSavedCards}
+                addMoreCards={addMoreCards}
+              />
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute
+                currentUser={currentUser}
+                isLoggedIn={isLoggedIn}
+                element={Profile}
+                onSignOut={signOut}
+                handleChangeProfileForm={handleChangeProfileForm}
+                updateUserInfo={updateUserInfo}
+                setCurrentUser={setCurrentUser}
+              />
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <Register
+                registerAuth={registerAuth}
+                isServerError={isServerError}
+              />
+            }
+          />
+          <Route
+            path="/signin"
+            element={
+              <Login loginAuth={loginAuth} isServerError={isServerError} />
+            }
+          />
+        </Routes>
+        {pathname === "/" ||
+        pathname === "/movies" ||
+        pathname === "/saved-movies" ? (
+          <Footer />
+        ) : (
+          ""
+        )}
+      </div>
     </CurrentUserContext.Provider>
   );
 }

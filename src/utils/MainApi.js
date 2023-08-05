@@ -12,17 +12,23 @@ class MainApi {
     return Promise.reject(`Ошибка: ${res.status}`);
   }
 
-  getUser() {
+  getUser(jwt) {
     return fetch(this._baseUrl + "/users/me", {
       method: "GET",
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
     }).then(this._checkStatus);
   }
 
-  updateUser(userObj) {
+  updateUser(userObj, jwt) {
     return fetch(this._baseUrl + "/users/me", {
       method: "PATCH",
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
       body: JSON.stringify({
         name: userObj.name,
         email: userObj.email,
@@ -30,25 +36,34 @@ class MainApi {
     }).then(this._checkStatus);
   }
 
-  getMovies() {
+  getMovies(jwt) {
     return fetch(this._baseUrl + "/movies", {
       method: "GET",
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
     }).then(this._checkStatus);
   }
 
-  createMovie(movieObj) {
+  createMovie(movieObj, jwt) {
     return fetch(this._baseUrl + "/movies", {
       method: "POST",
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
       body: JSON.stringify(movieObj),
     }).then(this._checkStatus);
   }
 
-  deleteMovie(movieId) {
+  deleteMovie(movieId, jwt) {
     return fetch(this._baseUrl + `/movies/${movieId}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
     }).then(this._checkStatus);
   }
 
@@ -76,7 +91,6 @@ class MainApi {
     return fetch(this._baseUrl + "/users/me", {
       method: "GET",
       headers: {
-        Accept: "application/json",
         "Content-Type": "application/json",
         Authorization: `Bearer ${jwt}`,
       },
@@ -86,10 +100,6 @@ class MainApi {
 
 const mainApi = new MainApi({
   baseUrl: "https://api.tim2772.nomoredomains.work",
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-    "Content-Type": "application/json",
-  },
 });
 
 export default mainApi;
