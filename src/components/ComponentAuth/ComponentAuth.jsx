@@ -43,7 +43,7 @@ function ComponentAuth({
                 className={`componentAuth__button ${
                   !isValid && "componentAuth__button_disabled"
                 }`}
-                disabled={!isValid}
+                target='_blank'
               >
                 {buttonText}
               </button>

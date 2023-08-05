@@ -10,7 +10,6 @@ function Login({ loginAuth, isServerError }) {
   function handleSubmit(evt) {
     evt.preventDefault();
     loginAuth({ email: values.email, password: values.password })
-    
   }
 
   return (

@@ -20,8 +20,6 @@ function MoviesCardList({
 }) {
   const { pathname } = useLocation();
 
-  // const { settingsCardRender } = useSettingCardsRender();
-
   const [maxMovie, setMaxMovie] = useState(0);
   useEffect(() => {
     setMaxMovie(settingsCardRender.cardRender);  

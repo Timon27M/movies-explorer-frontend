@@ -6,28 +6,31 @@ import { useSettingCardsRender } from "../../utils/useSettingCardsRender";
 function SavedMovies({
   savedCards,
   clickButtonDelete,
-  setSavedCards,
   addMoreCards,
   updateSavedCards,
-  isLoggedIn
 }) {
 
   const [isCheckedShortMovie, setIsCheckedShortMovie] = useState(false);
   const [savedFilmsObjRender, setSavedFilmsObjRender] = useState([]);
+  const [allCards, setAllCards] = useState([])
   
   const { settingsCardRender, isDownloadSettingCards } =
     useSettingCardsRender();
 
-  const localSavedMovies = JSON.parse(localStorage.getItem("savedMovies"));
+  // const savedCards = JSON.parse(localStorage.getItem("savedMovies"));
 
   useEffect(() => {
-    console.log(localSavedMovies)
+    console.log(savedCards)
+    console.log(savedCards)
   }, [])
 
 useEffect(() => {
+  console.log(savedCards)
+  setAllCards(savedCards)
   setSavedFilmsObjRender(
-    localSavedMovies.slice(0, settingsCardRender.cardRender)
+    savedCards.slice(0, settingsCardRender.cardRender)
   );
+  
 }, [isDownloadSettingCards, window.innerWidth, updateSavedCards]);
 
   function onChangeCheckbox(isChecked) {
@@ -43,12 +46,12 @@ useEffect(() => {
     setSavedFilmsObjRender(
       newSavedFilmsShortTime.slice(0, settingsCardRender.cardRender)
     );
-    setSavedCards(newSavedFilmsShortTime);
+    setAllCards(newSavedFilmsShortTime);
   }
 
   function handleSubmitSearchForm(inputText, isChecked) {
     if (inputText) {
-      const filmsSearch = localSavedMovies.filter((savedCard) => {
+      const filmsSearch = savedCards.filter((savedCard) => {
         const filmNameWords = savedCard.nameRU
           .toLowerCase()
           .split(/\ |\. |\:|\, |\!/);
@@ -60,7 +63,7 @@ useEffect(() => {
       if (isChecked) {
         checkArrayForTime(filmsSearch);
       } else {
-        setSavedCards(filmsSearch);
+        setAllCards(filmsSearch);
         setSavedFilmsObjRender(
           filmsSearch.slice(0, settingsCardRender.cardRender)
         );
@@ -68,11 +71,11 @@ useEffect(() => {
     } else {
       if (isDownloadSettingCards === false) {
         if (isChecked) {
-          checkArrayForTime(localSavedMovies)
+          checkArrayForTime(savedCards)
         } else {
-          setSavedCards(localSavedMovies);
+          setAllCards(savedCards);
           setSavedFilmsObjRender(
-            localSavedMovies.slice(0, settingsCardRender.cardRender)
+            savedCards.slice(0, settingsCardRender.cardRender)
           );
         }
 
@@ -93,7 +96,7 @@ useEffect(() => {
       />
       <MoviesCardList
         settingsCardRender={settingsCardRender}
-        allSavedCards={savedCards}
+        allSavedCards={allCards}
         savedFilmsObjRender={savedFilmsObjRender}
         clickButtonDelete={clickButtonDelete}
         handleClickMoreSavedMovies={handleClickMore}

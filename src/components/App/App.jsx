@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate, redirect } from "react-router-dom";
 
 import Header from "../Header/Header.jsx";
 import Footer from "../Footer/Footer";
@@ -24,72 +24,92 @@ function App() {
   const [savedCards, setSavedCards] = useState([]);
   const [updateSavedCards, setUpdateSavedCards] = useState(false);
   const [isServerError, setIsServerError] = useState(false);
-  const [isUseEffectGetMoviesOn, setIsUseEffectGetMoviesOn] = useState(false);
-
-  // useEffect(() => {
-  //   console.log(localStorage)
-  //   console.log(savedCards)
-  //   if (isLoggedIn === true) {
-  //     setIsUseEffectGetMoviesOn(true)
-  //   }
-  // }, [])
+ 
 
   useEffect(() => {
-      const jwt = localStorage.getItem("jwt");
-  console.log(jwt)
-      if (jwt) {
-        mainApi
-          .getUserInfo(jwt)
-          .then((res) => {
-            console.log(res)
-            setCurrentUser(res)
-            setIsLoggedIn(true);
-            navigate({ replace: true });
-          })
-          .catch((err) => {
-            console.log(err); // выведем ошибку в консоль
-          })
-      }
-  }, [isLoggedIn]);
+    console.log(isLoggedIn)
+    console.log(savedCards)
+    console.log(localStorage.getItem("jwt"))
+  })
 
+  function getMainData() {
+    Promise.all([mainApi.getUser(), mainApi.getMovies()])
+    .then(([userInfo, savedMovies]) => {
+      setCurrentUser(userInfo)
+      setSavedCards(savedMovies)
+    })
+    .catch((err) => console.log(err))
+    .finally(() => {
+      console.log(savedCards)
+    })
+  }
+  
   useEffect(() => {
-    if (isLoggedIn === true && isUseEffectGetMoviesOn === true) {
-      mainApi
-        .getMovies()
-        .then((res) => {
-          localStorage.setItem("savedMovies", JSON.stringify(res));
-          setSavedCards(res);
-          console.log(res)
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } 
-  }, [isLoggedIn])
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      getMainData()
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false)
+    }
+  }, [])
 
   // useEffect(() => {
-  //   const localSavedMovies = localStorage.getItem("savedMovies");
+  //     const jwt = localStorage.getItem("jwt");
+  // console.log(jwt)
+  //     if (jwt) {
+  //       setIsLoggedIn(true)
+  //       mainApi
+  //         .getUserInfo(jwt)
+  //         .then((res) => {
+  //           console.log(res)
+  //           setCurrentUser(res)
+  //           setIsLoggedIn(true);
+  //           navigate({ replace: true });
+  //         })
+  //         .catch((err) => {
+  //           console.log(err); // выведем ошибку в консоль
+  //         })
+  //     }
+  // }, [isLoggedIn]);
 
-  //   if (!localSavedMovies) {
+  // // useEffect(() => {
+  // //   const jwt = localStorage.getItem("jwt");
+  // //   if (jwt) {
+  // //     setIsLoggedIn(true)
+  // //   }
+  // //   console.log(isLoggedIn)
+  // //   if (isLoggedIn === true) {
+  // //     mainApi
+  // //       .getMovies()
+  // //       .then((res) => {
+  // //         setSavedCards(res);
+  // //         localStorage.setItem("savedMovies", JSON.stringify(res));
+  // //         console.log(res)
+  // //       })
+  // //       .catch((err) => {
+  // //         console.log(err);
+  // //       });
+  // //   } 
+  // // }, [])
+
+  // useEffect(() => {
   //     mainApi
   //       .getMovies()
   //       .then((res) => {
-  //         localStorage.setItem("savedMovies", JSON.stringify(res));
   //         setSavedCards(res);
   //       })
   //       .catch((err) => {
   //         console.log(err);
   //       });
-  //   } else {
-  //     setSavedCards(JSON.parse(localSavedMovies));
-  //   }
-  // }, []);
+  //   }, []);
 
   // useEffect(() => {
   //   if (isLoggedIn === true) {
   //     mainApi
   //       .getUser()
   //       .then((res) => {
+  //         console.log(isLoggedIn);
   //         console.log(res);
   //         setCurrentUser(res);
   //       })
@@ -101,6 +121,30 @@ function App() {
   //       })
   //   } 
   // }, [isLoggedIn]);
+
+    // функция авторизации
+    function loginAuth({ email, password }) {
+      mainApi
+        .login({ email, password })
+        .then((res) => {
+          localStorage.setItem("jwt", res.token);
+          navigate("/movies", { replace: true });
+        })
+        .catch((err) => {
+          console.log(err); // выведем ошибку в консоль
+          setIsServerError(true);
+        })
+        .finally(() => {
+          const jwt = localStorage.getItem("jwt");
+
+          if (jwt) {
+            getMainData()
+            setIsLoggedIn(true);
+          } else {
+            setIsLoggedIn(false)
+          }
+        })
+    }
 
   function clickButtonLike(cardObj) {
     const checkCard = savedCards.find((card) => {
@@ -123,10 +167,6 @@ function App() {
           movieId: cardObj.id,
         })
         .then((res) => {
-          localStorage.setItem(
-            "savedMovies",
-            JSON.stringify([res, ...savedCards])
-          );
           setSavedCards([res, ...savedCards]);
           cardObj.isLiked = true;
         })
@@ -137,14 +177,6 @@ function App() {
       mainApi
         .deleteMovie(checkCard._id)
         .then((res) => {
-          localStorage.setItem(
-            "savedMovies",
-            JSON.stringify(
-              savedCards.filter(
-                (savedCard) => savedCard.movieId !== checkCard.movieId
-              )
-            )
-          );
           setSavedCards(
             savedCards.filter(
               (savedCard) => savedCard.movieId !== checkCard.movieId
@@ -173,19 +205,9 @@ function App() {
     });
     console.log(checkCard);
 
-    const localSavedMovies = JSON.parse(localStorage.getItem("savedMovies"));
-
     mainApi
       .deleteMovie(checkCard._id)
       .then((res) => {
-        localStorage.setItem(
-          "savedMovies",
-          JSON.stringify(
-            localSavedMovies.filter(
-              (localSavedMovie) => localSavedMovie.movieId !== checkCard.movieId
-            )
-          )
-        );
         setSavedCards(
           savedCards.filter(
             (savedCard) => savedCard.movieId !== checkCard.movieId
@@ -232,34 +254,36 @@ function App() {
       });
   }
 
-  // функция авторизации
-  function loginAuth({ email, password }) {
-    mainApi
-      .login({ email, password })
-      .then((res) => {
-        console.log(res)
-        localStorage.setItem("jwt", res.token);
-        setIsServerError(false);
-        setIsLoggedIn(true);
-        navigate("/movies", { replace: true });
-      })
-      .catch((err) => {
-        console.log(err); // выведем ошибку в консоль
-        setIsServerError(true);
-      })
-      .finally(() => {
-        console.log(currentUser)
-        setIsUseEffectGetMoviesOn(true)
-      })
-  }
+  // // функция авторизации
+  // function loginAuth({ email, password }) {
+  //   mainApi
+  //     .login({ email, password })
+  //     .then((res) => {
+  //       setIsLoggedIn(true);
+  //       // console.log(res)
+  //       // console.log(isLoggedIn)
+  //       localStorage.setItem("jwt", res.token);
+  //       // setIsServerError(false);
+  //       navigate("/movies", { replace: true });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err); // выведем ошибку в консоль
+  //       setIsServerError(true);
+  //     })
+  //     .finally(() => {
+  //       console.log(localStorage.getItem('jwt'))
+  //       console.log(isLoggedIn)
+  //       setIsUseEffectGetMoviesOn(true)
+  //     })
+  // }
 
   function signOut() {
-    localStorage.clear();
-    localStorage.removeItem('savedMovies')
-    localStorage.removeItem('jwt')
-    setCurrentUser({});
     setSavedCards([]);
-    setIsUseEffectGetMoviesOn(false)
+    localStorage.clear();
+    // localStorage.removeItem('savedMovies')
+    // localStorage.removeItem('jwt')
+    setCurrentUser({});
+    // setIsUseEffectGetMoviesOn(false)
     setIsLoggedIn(false);
   }
 
