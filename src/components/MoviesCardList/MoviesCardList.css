@@ -73,3 +73,9 @@
     font-size: 20px;
   }
 }
+
+@media all and (min-width: 1350px) {
+  .moviesCardList__elements {
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
+  }
+}

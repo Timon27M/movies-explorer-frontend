@@ -1,6 +1,5 @@
 import "../AuthInputs/AuthInputs.css";
 import ComponentAuth from "../ComponentAuth/ComponentAuth";
-import { useState } from "react";
 import useFormWithValidation from "../../utils/FormValidation";
 
 function Login({ loginAuth, isServerError }) {

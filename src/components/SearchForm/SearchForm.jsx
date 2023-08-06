@@ -27,7 +27,7 @@ useEffect(() => {
   } else if (pathname === '/saved-movies') {
     handleSubmitSearchForm('')
   }
-}, [isDownloadSettingCards])
+}, [isDownloadSettingCards, checkboxValue])
 
 
   function changeInput(evt) {
@@ -41,6 +41,8 @@ useEffect(() => {
 
   function handleChangeCheckbox(evt) {
     onChangeCheckbox(evt.target.checked);
+    setCheckboxValue(evt.target.checked);
+    localStorage.setItem("checkboxIsChecked", JSON.stringify(evt.target.checked));
   }
 
   return (

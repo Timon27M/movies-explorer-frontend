@@ -5,7 +5,6 @@ import {
   Routes,
   useLocation,
   useNavigate,
-  redirect,
 } from "react-router-dom";
 
 import Header from "../Header/Header.jsx";
@@ -31,12 +30,7 @@ function App() {
   const [updateSavedCards, setUpdateSavedCards] = useState(false);
   const [isServerError, setIsServerError] = useState(false);
   const [localStorageToken, setLocalStorageToken] = useState(null);
-
-  useEffect(() => {
-    console.log(isLoggedIn);
-    console.log(savedCards);
-    console.log(localStorage.getItem("jwt"));
-  });
+  const [profileResponseInfo, setProfileResponseInfo] = useState({});
 
   function getMainData(jwt) {
     Promise.all([mainApi.getUserInfo(jwt), mainApi.getMovies(jwt)])
@@ -46,9 +40,15 @@ function App() {
       })
       .catch((err) => console.log(err))
       .finally(() => {
-        console.log(savedCards);
+        navigate(JSON.parse(window.sessionStorage.getItem('lastRoute') || '{}'), { replace: true })
       });
   }
+
+  useEffect(() => {
+    window.onbeforeunload = () => {
+        window.sessionStorage.setItem('lastRoute', JSON.stringify(window.location.pathname))
+    }
+}, [])
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -61,107 +61,6 @@ function App() {
     }
   }, [isLoggedIn]);
 
-  // useEffect(() => {
-  //   const jwt = localStorage.getItem("jwt");
-  //   if (jwt) {
-  //     mainApi.getUserInfo(jwt)
-  //     .then((res) => {
-  //       setCurrentUser(res);
-  //       setIsLoggedIn(true);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     })
-  //     .finally(() => {
-  //       console.log(isLoggedIn)
-  //       console.log(currentUser)
-  //     })
-  //   } else {
-  //     setIsLoggedIn(false);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   const jwt = localStorage.getItem("jwt");
-  //   if (jwt) {
-  //     mainApi.getMovies()
-  //     .then((res) => {
-  //       setSavedCards(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  //   }
-  // }, [localStorageToken])
-
-  // useEffect(() => {
-  //     const jwt = localStorage.getItem("jwt");
-  // console.log(jwt)
-  //     if (jwt) {
-  //       setIsLoggedIn(true)
-  //       mainApi
-  //         .getUserInfo(jwt)
-  //         .then((res) => {
-  //           console.log(res)
-  //           setCurrentUser(res)
-  //           setIsLoggedIn(true);
-  //           navigate({ replace: true });
-  //         })
-  //         .catch((err) => {
-  //           console.log(err); // выведем ошибку в консоль
-  //         })
-  //     }
-  // }, [isLoggedIn]);
-
-  // // useEffect(() => {
-  // //   const jwt = localStorage.getItem("jwt");
-  // //   if (jwt) {
-  // //     setIsLoggedIn(true)
-  // //   }
-  // //   console.log(isLoggedIn)
-  // //   if (isLoggedIn === true) {
-  // //     mainApi
-  // //       .getMovies()
-  // //       .then((res) => {
-  // //         setSavedCards(res);
-  // //         localStorage.setItem("savedMovies", JSON.stringify(res));
-  // //         console.log(res)
-  // //       })
-  // //       .catch((err) => {
-  // //         console.log(err);
-  // //       });
-  // //   }
-  // // }, [])
-
-  // useEffect(() => {
-  //     mainApi
-  //       .getMovies()
-  //       .then((res) => {
-  //         setSavedCards(res);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }, []);
-
-  // useEffect(() => {
-  //   if (isLoggedIn === true) {
-  //     mainApi
-  //       .getUser()
-  //       .then((res) => {
-  //         console.log(isLoggedIn);
-  //         console.log(res);
-  //         setCurrentUser(res);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       })
-  //       .finally(() => {
-  //         console.log(currentUser)
-  //       })
-  //   }
-  // }, [isLoggedIn]);
-
   // функция авторизации
   function loginAuth({ email, password }) {
     mainApi
@@ -169,21 +68,25 @@ function App() {
       .then((res) => {
         localStorage.setItem("jwt", res.token);
         navigate("/movies", { replace: true });
+        window.sessionStorage.setItem('lastRoute', JSON.stringify(window.location.pathname))
         setIsLoggedIn(true);
-        console.log(res);
       })
       .catch((err) => {
         console.log(err); // выведем ошибку в консоль
         setIsServerError(true);
+      });
+  }
+
+  function registerAuth({ name, email, password }) {
+    mainApi
+      .register({ name, email, password })
+      .then((res) => {
+        navigate("/signin", { replace: true });
+        setIsServerError(false);
       })
-      .finally(() => {
-        // const jwt = localStorage.getItem("jwt");
-        // if (jwt) {
-        //   getMainData(jwt)
-        //   setIsLoggedIn(true);
-        // } else {
-        //   setIsLoggedIn(false)
-        // }
+      .catch((err) => {
+        console.log(err); // выведем ошибку в консоль
+        setIsServerError(true);
       });
   }
 
@@ -247,7 +150,6 @@ function App() {
     const checkCard = savedCards.find((card) => {
       return card.movieId === cardObj.movieId;
     });
-    console.log(checkCard);
 
     mainApi
       .deleteMovie(checkCard._id, localStorageToken)
@@ -276,50 +178,14 @@ function App() {
     mainApi
       .updateUser({ name, email }, localStorageToken)
       .then((res) => {
-        console.log(res);
         setCurrentUser(res);
+        setProfileResponseInfo({textMessage: 'Данные успешно обновлены', classNameMessage: 'profile__response-info_success'})
       })
       .catch((err) => {
         console.log(err);
+        setProfileResponseInfo({textMessage: 'Произошла ошибка', classNameMessage: 'profile__response-info_fail'})
       });
   }
-
-  function registerAuth({ name, email, password }) {
-    mainApi
-      .register({ name, email, password })
-      .then((res) => {
-        console.log({ name, email, password });
-        navigate("/signin", { replace: true });
-        setIsServerError(false);
-      })
-      .catch((err) => {
-        console.log(err); // выведем ошибку в консоль
-        setIsServerError(true);
-      });
-  }
-
-  // // функция авторизации
-  // function loginAuth({ email, password }) {
-  //   mainApi
-  //     .login({ email, password })
-  //     .then((res) => {
-  //       setIsLoggedIn(true);
-  //       // console.log(res)
-  //       // console.log(isLoggedIn)
-  //       localStorage.setItem("jwt", res.token);
-  //       // setIsServerError(false);
-  //       navigate("/movies", { replace: true });
-  //     })
-  //     .catch((err) => {
-  //       console.log(err); // выведем ошибку в консоль
-  //       setIsServerError(true);
-  //     })
-  //     .finally(() => {
-  //       console.log(localStorage.getItem('jwt'))
-  //       console.log(isLoggedIn)
-  //       setIsUseEffectGetMoviesOn(true)
-  //     })
-  // }
 
   function signOut() {
     localStorage.clear();
@@ -351,6 +217,7 @@ function App() {
                 element={Movies}
                 savedCards={savedCards}
                 addMoreCards={addMoreCards}
+                localStorageToken={localStorageToken}
               />
             }
           />
@@ -362,7 +229,6 @@ function App() {
                 element={SavedMovies}
                 savedCards={savedCards}
                 clickButtonDelete={clickButtonDelete}
-                setSavedCards={setSavedCards}
                 updateSavedCards={updateSavedCards}
                 addMoreCards={addMoreCards}
               />
@@ -372,13 +238,13 @@ function App() {
             path="/profile"
             element={
               <ProtectedRoute
-                currentUser={currentUser}
                 isLoggedIn={isLoggedIn}
                 element={Profile}
                 onSignOut={signOut}
                 handleChangeProfileForm={handleChangeProfileForm}
                 updateUserInfo={updateUserInfo}
-                setCurrentUser={setCurrentUser}
+                setProfileResponseInfo={setProfileResponseInfo}
+                profileResponseInfo={profileResponseInfo}
               />
             }
           />

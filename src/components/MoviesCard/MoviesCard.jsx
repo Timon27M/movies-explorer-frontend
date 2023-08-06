@@ -1,6 +1,5 @@
 import "./MoviesCard.css";
 import { useLocation, Link } from "react-router-dom";
-import { useEffect } from "react";
 
 function MoviesCard({
   card,
@@ -26,7 +25,6 @@ function MoviesCard({
   }
 
   function handlebuttonDeleteClick() {
-    console.log(card)
     clickButtonDelete(card);
   }
 

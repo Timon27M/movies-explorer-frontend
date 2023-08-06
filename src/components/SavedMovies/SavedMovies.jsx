@@ -17,15 +17,7 @@ function SavedMovies({
   const { settingsCardRender, isDownloadSettingCards } =
     useSettingCardsRender();
 
-  // const savedCards = JSON.parse(localStorage.getItem("savedMovies"));
-
-  useEffect(() => {
-    console.log(savedCards)
-    console.log(savedCards)
-  }, [])
-
 useEffect(() => {
-  console.log(savedCards)
   setAllCards(savedCards)
   setSavedFilmsObjRender(
     savedCards.slice(0, settingsCardRender.cardRender)
@@ -52,12 +44,18 @@ useEffect(() => {
   function handleSubmitSearchForm(inputText, isChecked) {
     if (inputText) {
       const filmsSearch = savedCards.filter((savedCard) => {
-        const filmNameWords = savedCard.nameRU
-          .toLowerCase()
-          .split(/\ |\. |\:|\, |\!/);
-        return filmNameWords.some((filmNameWord) => {
-          return inputText.toLowerCase() === filmNameWord;
-        });
+        if (inputText.split(" ").length === 1) {
+          const filmNameWords = savedCard.nameRU
+            .toLowerCase()
+            .split(/\ |\. |\:|\, |\!|\\/);
+          return filmNameWords.some((filmNameWord) => {
+            return inputText.toLowerCase() === filmNameWord;
+          });
+        } else if (inputText.split(" ").length > 1) {
+          return savedCard.nameRU
+                .toLowerCase()
+                .includes(inputText.toLowerCase());
+        }
       });
 
       if (isChecked) {

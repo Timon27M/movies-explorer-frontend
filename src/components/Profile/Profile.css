@@ -42,7 +42,7 @@
 
 .profile__content_type_email {
   padding-top: 17px;
-  margin-bottom: 100px;
+  margin-bottom: 30px;
 }
 
 .profile__buttons {
@@ -79,6 +79,28 @@
   line-height: normal;
 }
 
+.profile__response-info {
+  /* display: none; */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-align: left;
+  max-width: 410px;
+  width: 100%;
+  margin-bottom: 100px;
+}
+
+.profile__response-info_success {
+  display: block;
+  color: rgb(51, 200, 51);
+}
+.profile__response-info_fail {
+  display: block;
+  color: #ff3055;
+}
+
 .profile__button {
   border: none;
   background-color: #ffffff;
@@ -92,7 +114,7 @@
 }
 
 .profile__button-edit {
-  cursor:default;
+  cursor: default;
   width: 100%;
   color: #000;
   text-align: center;
@@ -109,7 +131,7 @@
 .profile__button-edit_active {
   cursor: pointer;
   background-color: #3456f3;
-  color: #FFF;
+  color: #fff;
 }
 
 .profile__button-exit {

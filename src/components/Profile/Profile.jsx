@@ -2,15 +2,16 @@ import "./Profile.css";
 import { Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import useFormWithValidation from "../../utils/FormValidation";
-import mainApi from "../../utils/MainApi";
 import { CurrentUserContext } from '../../utils/CurrentUserContext';
 
-function Profile({ onSignOut, isLoggedIn, updateUserInfo, setCurrentUser }) {
+function Profile({ onSignOut, updateUserInfo, setProfileResponseInfo, profileResponseInfo }) {
 
   const currentUser = useContext(CurrentUserContext);
+
+  const [isValidFirstData, setIsValidFirstData] = useState(false);
   
-  const { values, handleChange, isValid, setValues, setIsValid} =
-  useFormWithValidation();
+  const { values, handleChange, isValid, setValues, setIsValid, resetForm} =
+  useFormWithValidation(currentUser);
   
   useEffect(() => {
     setValues(currentUser);
@@ -21,9 +22,21 @@ function Profile({ onSignOut, isLoggedIn, updateUserInfo, setCurrentUser }) {
     onSignOut()
   }
 
+  useEffect(() => {
+    if (values.name === currentUser.name && values.email === currentUser.email) {
+      setIsValidFirstData(false);
+    } else {
+      setIsValidFirstData(true);
+    }
+  }, [values, currentUser])
+
+  // function handleChangeProfile(event) {
+  //   handleChange(event);
+  // }
+
   function handelSubmitProfileForm(evt) {
     evt.preventDefault()
-    updateUserInfo({ name: values.name, email: values.email })
+    updateUserInfo({ name: values.name, email: values.email });
     setIsValid(false);
   }
 
@@ -51,10 +64,11 @@ function Profile({ onSignOut, isLoggedIn, updateUserInfo, setCurrentUser }) {
             className="profile__input profile__input_type_text"
           />
         </div>
+        <span className={`profile__response-info ${profileResponseInfo.classNameMessage}`}>{profileResponseInfo.textMessage}</span>
       </form>
 
       <div className="profile__buttons">
-        <button type="submit" form="profileForm" disabled={!isValid} className={`profile__button profile__button-edit ${isValid && 'profile__button-edit_active'}`}>
+        <button type="submit" form="profileForm" disabled={!isValid || !isValidFirstData} className={`profile__button profile__button-edit ${(isValid && isValidFirstData) && 'profile__button-edit_active'}`}>
           Редактировать
         </button>
         <Link

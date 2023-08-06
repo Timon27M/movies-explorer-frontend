@@ -23,7 +23,7 @@ function MoviesCardList({
   const [maxMovie, setMaxMovie] = useState(0);
   useEffect(() => {
     setMaxMovie(settingsCardRender.cardRender);  
-  }, [window.innerWidth])
+  }, [window.innerWidth, allSavedCards])
 
   return (
     <section className="moviesCardList">

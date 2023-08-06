@@ -4,7 +4,12 @@ import moviesApi from "../../utils/MoviesApi";
 import { useState, useEffect } from "react";
 import { useSettingCardsRender } from "../../utils/useSettingCardsRender";
 
-function Movies({ clickButtonLike, savedCards, addMoreCards }) {
+function Movies({
+  clickButtonLike,
+  savedCards,
+  addMoreCards,
+  localStorageToken,
+}) {
   const [filmsObj, setFilmsObj] = useState([]);
   const [isDownloadData, setIsDownloadData] = useState(false);
   const [filmsObjRender, setFilmsObjRender] = useState([]);
@@ -16,7 +21,9 @@ function Movies({ clickButtonLike, savedCards, addMoreCards }) {
 
   useEffect(() => {
     setFilmsObjRender(filmsObj.slice(0, settingsCardRender.cardRender));
-    setIsCheckedShortMovie(JSON.parse(localStorage.getItem('checkboxIsChecked')))
+    setIsCheckedShortMovie(
+      JSON.parse(localStorage.getItem("checkboxIsChecked"))
+    );
   }, [window.innerWidth]);
 
   function onChangeCheckbox(isChecked) {
@@ -38,15 +45,21 @@ function Movies({ clickButtonLike, savedCards, addMoreCards }) {
     if (inputText) {
       setIsDownloadData(true);
       moviesApi
-        .getMovies()
+        .getMovies(localStorageToken)
         .then((data) => {
           const foundDataFilms = data.filter((dataFilm) => {
-            const FilmNameWords = dataFilm.nameRU
-              .toLowerCase()
-              .split(/\ |\. |\:|\, |\!/);
-            return FilmNameWords.some((FilmNameWord) => {
-              return inputText.toLowerCase() === FilmNameWord;
-            });
+            if (inputText.split(" ").length === 1) {
+              const FilmNameWords = dataFilm.nameRU
+                .toLowerCase()
+                .split(/\ |\. |\:|\, |\!|\\/);
+              return FilmNameWords.some((FilmNameWord) => {
+                return inputText.toLowerCase() === FilmNameWord;
+              });
+            } else if (inputText.split(" ").length > 1) {
+              return dataFilm.nameRU
+                .toLowerCase()
+                .includes(inputText.toLowerCase());
+            }
           });
 
           const newDataFilms = foundDataFilms.map((foundDataFilm) => {
@@ -56,10 +69,7 @@ function Movies({ clickButtonLike, savedCards, addMoreCards }) {
 
             return foundDataFilm;
           });
-          localStorage.setItem(
-            "checkboxIsChecked",
-            JSON.stringify(isChecked)
-          );
+          localStorage.setItem("checkboxIsChecked", JSON.stringify(isChecked));
           localStorage.setItem("resultSearchMovies", inputText);
           if (isChecked) {
             checkArrayForTime(newDataFilms);
@@ -72,7 +82,7 @@ function Movies({ clickButtonLike, savedCards, addMoreCards }) {
           }
         })
         .catch((err) => {
-          console.log(err)
+          console.log(err);
         })
         .finally(() => {
           setIsDownloadData(false);
