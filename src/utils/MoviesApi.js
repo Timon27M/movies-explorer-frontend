@@ -11,12 +11,11 @@ class MoviesApi {
     return Promise.reject(`Ошибка: ${res.status}`);
   }
 
-  getMovies(jwt) {
+  getMovies() {
     return fetch(this._baseUrl, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
       },
     }).then(this._checkStatus);
   }

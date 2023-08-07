@@ -3,12 +3,11 @@ import ComponentAuth from "../ComponentAuth/ComponentAuth";
 import useFormWithValidation from "../../utils/FormValidation";
 
 function Login({ loginAuth, isServerError }) {
-  const { values, handleChange, errors, isValid} =
-  useFormWithValidation(); 
+  const { values, handleChange, errors, isValid } = useFormWithValidation();
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    loginAuth({ email: values.email, password: values.password })
+    loginAuth({ email: values.email, password: values.password });
   }
 
   return (
@@ -32,9 +31,10 @@ function Login({ loginAuth, isServerError }) {
             name="email"
             value={values.email}
             onChange={handleChange}
+            required
           />
         </div>
-          <span className="auth-text-error">{errors.email}</span>
+        <span className="auth-text-error">{errors.email}</span>
         <div className="auth-content">
           <p className="auth-content__name">Пароль</p>
           <input
@@ -43,6 +43,7 @@ function Login({ loginAuth, isServerError }) {
             name="password"
             value={values.password}
             className="auth-content__input"
+            required
           />
         </div>
         <span className="auth-text-error">{errors.password}</span>

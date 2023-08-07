@@ -55,7 +55,6 @@ function ComponentAuth({
           <Link
             to={containerLinkPath}
             className="componentAuth__container-link"
-            target="_blank"
           >
             {containerLinkName}
           </Link>

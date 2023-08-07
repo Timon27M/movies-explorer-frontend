@@ -12,7 +12,8 @@ function SavedMovies({
 
   const [isCheckedShortMovie, setIsCheckedShortMovie] = useState(false);
   const [savedFilmsObjRender, setSavedFilmsObjRender] = useState([]);
-  const [allCards, setAllCards] = useState([])
+  const [allCards, setAllCards] = useState([]);
+  const [inputTextSavedCards, setInputTextSavedCards] = useState('');
   
   const { settingsCardRender, isDownloadSettingCards } =
     useSettingCardsRender();
@@ -22,6 +23,7 @@ useEffect(() => {
   setSavedFilmsObjRender(
     savedCards.slice(0, settingsCardRender.cardRender)
   );
+  setInputTextSavedCards('');
   
 }, [isDownloadSettingCards, window.innerWidth, updateSavedCards]);
 
@@ -40,22 +42,17 @@ useEffect(() => {
     );
     setAllCards(newSavedFilmsShortTime);
   }
-
+  
   function handleSubmitSearchForm(inputText, isChecked) {
     if (inputText) {
+      setInputTextSavedCards(inputText);
       const filmsSearch = savedCards.filter((savedCard) => {
-        if (inputText.split(" ").length === 1) {
-          const filmNameWords = savedCard.nameRU
-            .toLowerCase()
-            .split(/\ |\. |\:|\, |\!|\\/);
-          return filmNameWords.some((filmNameWord) => {
-            return inputText.toLowerCase() === filmNameWord;
-          });
-        } else if (inputText.split(" ").length > 1) {
-          return savedCard.nameRU
-                .toLowerCase()
-                .includes(inputText.toLowerCase());
-        }
+        return (
+          savedCard.nameRU
+            ?.toLowerCase()
+            .includes(inputText?.toLowerCase()) ||
+            savedCard.nameEN?.toLowerCase().includes(inputText?.toLowerCase())
+        );
       });
 
       if (isChecked) {
@@ -91,6 +88,7 @@ useEffect(() => {
         handleSubmitSearchForm={handleSubmitSearchForm}
         isCheckedShortMovie={isCheckedShortMovie}
         onChangeCheckbox={onChangeCheckbox}
+        inputTextSavedCards={inputTextSavedCards}
       />
       <MoviesCardList
         settingsCardRender={settingsCardRender}

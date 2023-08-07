@@ -8,7 +8,6 @@ function Movies({
   clickButtonLike,
   savedCards,
   addMoreCards,
-  localStorageToken,
 }) {
   const [filmsObj, setFilmsObj] = useState([]);
   const [isDownloadData, setIsDownloadData] = useState(false);
@@ -45,23 +44,18 @@ function Movies({
     if (inputText) {
       setIsDownloadData(true);
       moviesApi
-        .getMovies(localStorageToken)
+        .getMovies()
         .then((data) => {
           const foundDataFilms = data.filter((dataFilm) => {
-            if (inputText.split(" ").length === 1) {
-              const FilmNameWords = dataFilm.nameRU
-                .toLowerCase()
-                .split(/\ |\. |\:|\, |\!|\\/);
-              return FilmNameWords.some((FilmNameWord) => {
-                return inputText.toLowerCase() === FilmNameWord;
-              });
-            } else if (inputText.split(" ").length > 1) {
-              return dataFilm.nameRU
-                .toLowerCase()
-                .includes(inputText.toLowerCase());
-            }
+            return (
+              dataFilm.nameRU
+                ?.toLowerCase()
+                .includes(inputText?.toLowerCase()) ||
+              dataFilm.nameEN?.toLowerCase().includes(inputText?.toLowerCase())
+            );
           });
 
+          
           const newDataFilms = foundDataFilms.map((foundDataFilm) => {
             foundDataFilm.isLiked = savedCards.some((savedCard) => {
               return foundDataFilm.id === savedCard.movieId;

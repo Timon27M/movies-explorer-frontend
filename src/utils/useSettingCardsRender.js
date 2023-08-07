@@ -11,7 +11,10 @@ export function useSettingCardsRender() {
   }
 
   function addSettings() {
-    if (widthWindow > 820) {
+    if (widthWindow > 1350) {
+      setSettingsCardRender({ cardRender: 12, cardRenderMore: 4 });
+      setIsDownloadSettingCards(false);
+    } else if (widthWindow > 820) {
       setSettingsCardRender({ cardRender: 12, cardRenderMore: 3 });
       setIsDownloadSettingCards(false);
     } else if (widthWindow >= 610) {
@@ -20,7 +23,7 @@ export function useSettingCardsRender() {
     } else if (widthWindow < 610) {
       setSettingsCardRender({ cardRender: 5, cardRenderMore: 2 });
       setIsDownloadSettingCards(false);
-    }
+    } 
   }
 
   useEffect(() => {

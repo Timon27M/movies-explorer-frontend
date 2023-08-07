@@ -32,7 +32,7 @@ function MoviesCard({
 
   return (
     <div key={key} id="moviesCard" className="moviesCard">
-      <div className="moviesCard__content" key={key}>
+      <div className="moviesCard__content">
         <Link className="moviesCard__trailer-link" to={trailerLink} target="_blank">
           <img src={image} alt="картинка" className="moviesCard__image" />
         </Link>

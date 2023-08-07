@@ -4,8 +4,17 @@ import { useEffect, useState, useContext } from "react";
 import useFormWithValidation from "../../utils/FormValidation";
 import { CurrentUserContext } from '../../utils/CurrentUserContext';
 
-function Profile({ onSignOut, updateUserInfo, setProfileResponseInfo, profileResponseInfo }) {
+function Profile({ onSignOut, updateUserInfo, profileResponseInfo }) {
 
+  const [responseServerInfo, setResponseServerInfo] = useState({});
+
+  useEffect(() => {
+    setResponseServerInfo(profileResponseInfo);
+  }, [profileResponseInfo])
+  
+  useEffect(() => {
+    setResponseServerInfo({})
+  }, []);
   const currentUser = useContext(CurrentUserContext);
 
   const [isValidFirstData, setIsValidFirstData] = useState(false);
@@ -64,7 +73,7 @@ function Profile({ onSignOut, updateUserInfo, setProfileResponseInfo, profileRes
             className="profile__input profile__input_type_text"
           />
         </div>
-        <span className={`profile__response-info ${profileResponseInfo.classNameMessage}`}>{profileResponseInfo.textMessage}</span>
+        <span className={`profile__response-info ${responseServerInfo.classNameMessage}`}>{responseServerInfo.textMessage}</span>
       </form>
 
       <div className="profile__buttons">
