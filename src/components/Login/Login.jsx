@@ -43,6 +43,7 @@ function Login({ loginAuth, isServerError }) {
             name="password"
             value={values.password}
             className="auth-content__input"
+            minLength={6}
             required
           />
         </div>

@@ -53,7 +53,7 @@ function SearchForm({
   function handleChangeCheckbox(evt) {
     onChangeCheckbox(evt.target.checked);
     setCheckboxValue(evt.target.checked);
-    if (pathname === '/movies') {
+    if (pathname === "/movies") {
       localStorage.setItem(
         "checkboxIsChecked",
         JSON.stringify(evt.target.checked)

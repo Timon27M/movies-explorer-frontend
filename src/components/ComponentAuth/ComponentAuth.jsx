@@ -14,7 +14,6 @@ function ComponentAuth({
   isValid,
   isServerError,
 }) {
-  // const classNameBlockServerError = `componentAuth__text-server-error ${!isServerError && 'componentAuth__text-server-error_active'}`
 
   return (
     <div className="componentAuth">
@@ -43,7 +42,6 @@ function ComponentAuth({
                 className={`componentAuth__button ${
                   !isValid && "componentAuth__button_disabled"
                 }`}
-                target='_blank'
               >
                 {buttonText}
               </button>

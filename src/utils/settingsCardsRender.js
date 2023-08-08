@@ -7,7 +7,6 @@ export function CheckSettingsCardsRender() {
 
   
   useEffect(() => {
-    //   const { innerWidth: width } = window;
     function changeWindowWidth() {
       const { innerWidth: newWidth } = window;
       setWidthWindow(newWidth);

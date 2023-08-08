@@ -25,6 +25,7 @@ function MoviesCardList({
     setMaxMovie(settingsCardRender.cardRender);  
   }, [window.innerWidth, allSavedCards, allMovies])
 
+
   return (
     <section className="moviesCardList">
       {pathname === "/movies" &&
@@ -67,11 +68,11 @@ function MoviesCardList({
         savedFilmsObjRender.length > 0 &&
         !isDownloadSettingCards && (
           <div className="moviesCardList__elements">
-            {savedFilmsObjRender.map((card, i) => (
+            {savedFilmsObjRender.map((card) => (
               <MoviesCard
                 movieId={card.movieId}
                 card={card}
-                key={i}
+                key={card.movieId}
                 image={card.image}
                 text={card.nameRU}
                 time={card.duration}

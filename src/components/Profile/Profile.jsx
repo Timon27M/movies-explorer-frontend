@@ -14,12 +14,13 @@ function Profile({ onSignOut, updateUserInfo, profileResponseInfo }) {
   
   useEffect(() => {
     setResponseServerInfo({})
+    setIsValidEmail(true)
   }, []);
   const currentUser = useContext(CurrentUserContext);
 
   const [isValidFirstData, setIsValidFirstData] = useState(false);
   
-  const { values, handleChange, isValid, setValues, setIsValid, resetForm} =
+  const { values, handleChange, isValid, setValues, setIsValid, setIsValidEmail } =
   useFormWithValidation(currentUser);
   
   useEffect(() => {
@@ -38,10 +39,6 @@ function Profile({ onSignOut, updateUserInfo, profileResponseInfo }) {
       setIsValidFirstData(true);
     }
   }, [values, currentUser])
-
-  // function handleChangeProfile(event) {
-  //   handleChange(event);
-  // }
 
   function handelSubmitProfileForm(evt) {
     evt.preventDefault()

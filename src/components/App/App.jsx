@@ -1,11 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import {
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import Header from "../Header/Header.jsx";
 import Footer from "../Footer/Footer";
@@ -16,8 +11,11 @@ import Profile from "../Profile/Profile";
 import Register from "../Register/Register";
 import Login from "../Login/Login";
 import mainApi from "../../utils/MainApi";
+import moviesApi from "../../utils/MoviesApi";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { CurrentUserContext } from "../../utils/CurrentUserContext";
+import PageNotFound from "../PageNotFound/PageNotFound";
+import Preloader from "../Preloader/Preloader";
 
 function App() {
   const { pathname } = useLocation();
@@ -31,24 +29,40 @@ function App() {
   const [isServerError, setIsServerError] = useState(false);
   const [localStorageToken, setLocalStorageToken] = useState(null);
   const [profileResponseInfo, setProfileResponseInfo] = useState({});
-
-  function getMainData(jwt) {
-    Promise.all([mainApi.getUserInfo(jwt), mainApi.getMovies(jwt)])
-      .then(([userInfo, savedMovies]) => {
-        setCurrentUser(userInfo);
-        setSavedCards(savedMovies);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        navigate(JSON.parse(window.sessionStorage.getItem('lastRoute') || '{}'), { replace: true })
-      });
-  }
+  const [allMovies, setAllMovies] = useState([]);
+  const [isDownloadPage, setIsDownloadPage] = useState(false);
 
   useEffect(() => {
     window.onbeforeunload = () => {
-        window.sessionStorage.setItem('lastRoute', JSON.stringify(window.location.pathname))
-    }
-}, [])
+      window.sessionStorage.setItem(
+        "lastRoute",
+        JSON.stringify(window.location.pathname)
+      );
+    };
+  }, []);
+
+  function getMainData(jwt) {
+    setIsDownloadPage(true);
+    Promise.all([
+      mainApi.getUserInfo(jwt),
+      mainApi.getMovies(jwt),
+      moviesApi.getMovies(),
+    ])
+      .then(([userInfo, savedMovies, allMovies]) => {
+        setCurrentUser(userInfo);
+        setSavedCards(savedMovies.reverse());
+        setAllMovies(allMovies);
+        localStorage.setItem("allMovies", JSON.stringify(allMovies));
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsDownloadPage(false);
+        navigate(
+          JSON.parse(window.sessionStorage.getItem("lastRoute") || "{}"),
+          { replace: true }
+        );
+      });
+  }
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -68,7 +82,6 @@ function App() {
       .then((res) => {
         localStorage.setItem("jwt", res.token);
         navigate("/movies", { replace: true });
-        window.sessionStorage.setItem('lastRoute', JSON.stringify(window.location.pathname))
         setIsLoggedIn(true);
       })
       .catch((err) => {
@@ -81,8 +94,10 @@ function App() {
     mainApi
       .register({ name, email, password })
       .then((res) => {
-        navigate("/signin", { replace: true });
+        localStorage.setItem("jwt", res.token);
+        navigate("/movies", { replace: true });
         setIsServerError(false);
+        setIsLoggedIn(true);
       })
       .catch((err) => {
         console.log(err); // выведем ошибку в консоль
@@ -179,11 +194,17 @@ function App() {
       .updateUser({ name, email }, localStorageToken)
       .then((res) => {
         setCurrentUser(res);
-        setProfileResponseInfo({textMessage: 'Данные успешно обновлены', classNameMessage: 'profile__response-info_success'})
+        setProfileResponseInfo({
+          textMessage: "Данные успешно обновлены",
+          classNameMessage: "profile__response-info_success",
+        });
       })
       .catch((err) => {
         console.log(err);
-        setProfileResponseInfo({textMessage: 'Произошла ошибка', classNameMessage: 'profile__response-info_fail'})
+        setProfileResponseInfo({
+          textMessage: "Произошла ошибка",
+          classNameMessage: "profile__response-info_fail",
+        });
       });
   }
 
@@ -197,6 +218,7 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
+      {isDownloadPage ? <Preloader /> :
       <div className="App">
         {pathname === "/" ||
         pathname === "/movies" ||
@@ -217,7 +239,8 @@ function App() {
                 element={Movies}
                 savedCards={savedCards}
                 addMoreCards={addMoreCards}
-                localStorageToken={localStorageToken}
+                setAllMovies={setAllMovies}
+                allMovies={allMovies}
               />
             }
           />
@@ -263,6 +286,7 @@ function App() {
               <Login loginAuth={loginAuth} isServerError={isServerError} />
             }
           />
+          <Route path="*" element={<PageNotFound />}></Route>
         </Routes>
         {pathname === "/" ||
         pathname === "/movies" ||
@@ -272,6 +296,7 @@ function App() {
           ""
         )}
       </div>
+}
     </CurrentUserContext.Provider>
   );
 }

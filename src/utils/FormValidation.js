@@ -1,44 +1,34 @@
 import React, { useCallback } from "react";
 
 //хук валидации формы
-function useFormWithValidation(userData) {
+function useFormWithValidation() {
   const [values, setValues] = React.useState({});
   const [errors, setErrors] = React.useState({});
   const [isValid, setIsValid] = React.useState(false);
-  const [isValidName, setIsValidName] = React.useState(false);
-  const [isValidEmail, setIsValidEmail] = React.useState(false);
+  const [isVaildEmail, setIsValidEmail] = React.useState(false);
+  const sampleEmail =
+    /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
 
   const handleChange = (event) => {
     const target = event.target;
     const name = target.name;
     const value = target.value;
     setValues({ ...values, [name]: value });
-    setErrors({ ...errors, [name]: target.validationMessage });
-    setIsValid(target.closest("form").checkValidity());
+    if (name === "email") {
+      if (!sampleEmail.test(value)) {
+        setIsValidEmail(false);
+        setErrors({ ...errors, [name]: "Некорректный email" });
+        setIsValid(false)
+      } else {
+        setIsValidEmail(true);
+        setErrors({ ...errors, [name]: "" });
+        setIsValid(target.closest("form").checkValidity())
+      }
+    } else {
+      setErrors({ ...errors, [name]: target.validationMessage });
+      setIsValid(isVaildEmail && target.closest("form").checkValidity());
+    }
   };
-
-  // const handleChangeProfile = (event) => {
-  //   const target = event.target;
-  //   const name = target.name;
-  //   const value = target.value;
-  //   setValues({ ...values, [name]: value });
-  //   setErrors({ ...errors, [name]: target.validationMessage });
-  //   setIsValid(target.closest("form").checkValidity());
-  //   if (name === 'name') {
-  //     if (value !== userData.name) {
-  //       // setIsValid(target.closest("form").checkValidity());
-  //       setIsValidName(true)
-  //     } else {
-  //       setIsValidName(false)
-  //     }
-  //   } else if (name === 'email') {
-  //     if (value !== userData.email) {
-  //       setIsValidEmail(true);
-  //     } else {
-  //       setIsValidEmail(false)
-  //     }
-  //     }
-  // }
 
   const resetForm = useCallback(
     (newValues = {}, newErrors = {}, newIsValid = false) => {
@@ -49,7 +39,16 @@ function useFormWithValidation(userData) {
     [setValues, setErrors, setIsValid]
   );
 
-  return { values, handleChange, errors, isValid, resetForm, setValues, setIsValid, };
+  return {
+    values,
+    handleChange,
+    errors,
+    isValid,
+    resetForm,
+    setValues,
+    setIsValid,
+    setIsValidEmail
+  };
 }
 
 export default useFormWithValidation;
