@@ -15,6 +15,7 @@
 .componentAuth__content {
   text-align: left;
   min-width: 396px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -52,8 +53,31 @@
   border: none;
 }
 
+.componentAuth__text-server-error {
+  display: none;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  color: #ff3055;
+}
+
+.componentAuth__text-server-error_active {
+  display: block;
+}
+
+.componentAuth__button_disabled {
+  background-color: #F8F8F8;
+  color: #C2C2C2;
+}
+
 .componentAuth__button:hover {
   opacity: 0.7;
+}
+
+.componentAuth__button_disabled:hover {
+  opacity: 1;
 }
 
 .componentAuth__container {

@@ -32,10 +32,15 @@
 }
 
 .auth-text-error {
+  display: block;
+  width: 100%;
   color: #ff3055;
   font-family: Inter;
   font-size: 10px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

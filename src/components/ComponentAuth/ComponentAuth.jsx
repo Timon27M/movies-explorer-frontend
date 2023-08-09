@@ -10,18 +10,42 @@ function ComponentAuth({
   containerLinkName,
   containerLinkPath,
   children,
+  handleSubmit,
+  isValid,
+  isServerError,
 }) {
+
   return (
     <div className="componentAuth">
       <div className="componentAuth__main-block">
         <div className="componentAuth__content">
-          <Link to="/" className="componentAuth__link">
+          <Link to="/" className="componentAuth__link" target="_blank">
             <img src={logoImg} alt="логотип" className="componentAuth__logo" />
           </Link>
           <h2 className="componentAuth__title">{title}</h2>
-          <form className="componentAuth__form" name={formName} noValidate>
+          <form
+            className="componentAuth__form"
+            onSubmit={handleSubmit}
+            name={formName}
+            noValidate
+          >
             {children}
-            <button className="componentAuth__button">{buttonText}</button>
+            <div className="componentAuth__blockSubmitButton">
+              <span
+                className={`componentAuth__text-server-error ${
+                  isServerError && "componentAuth__text-server-error_active"
+                }`}
+              >
+                Произошла ошибка
+              </span>
+              <button
+                className={`componentAuth__button ${
+                  !isValid && "componentAuth__button_disabled"
+                }`}
+              >
+                {buttonText}
+              </button>
+            </div>
           </form>
         </div>
         <div className="componentAuth__container">
