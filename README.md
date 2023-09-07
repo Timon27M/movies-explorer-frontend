@@ -40,10 +40,14 @@
 ## Инструкция
 * Создайте папку и перейдите в неё:
   `cd <Имя-папки>`
-  
-Figma-файл https://disk.yandex.ru/d/MnBw_rwwoFkfqQ
+* Склонируйте этот репозиторий:
+  `git clone https://github.com/famovkin/movies-explorer-frontend.git`
+* Установите все зависимости:
+  `yarn или npm install`
+* Теперь можете запустить проект:
+  `npm start или yarn start`
 
-Ссылка на Pull request https://github.com/Timon27M/movies-explorer-frontend/pull/2
 
-Ссылка на сайт https://tim2772.nomoredomains.work/
+## Ссылка на сайт
+https://tim2772.nomoredomains.work/
 
